@@ -1,0 +1,27 @@
+
+# 00     00  00000000  000   000  000   000
+# 000   000  000       0000  000  000   000
+# 000000000  0000000   000 0 000  000   000
+# 000 0 000  000       000  0000  000   000
+# 000   000  00000000  000   000   0000000
+
+kacheln
+    New             cmdctrl+n
+    Close           cmdctrl+w delete
+    Quit            alt+cmdctrl+q
+    Scheme          cmdctrl+i
+    About           alt+cmdctrl+/
+    Hide            cmdctrl+h
+    Screenshot      alt+cmdctrl+s
+    Reload          alt+cmdctrl+l
+    Restore         cmdctrl+r
+    Store           cmdctrl+s
+    DevTools        alt+cmdctrl+i
+    MoveDown        cmdctrl+down
+    MoveRight       cmdctrl+right
+    MoveUp          cmdctrl+up
+    MoveLeft        cmdctrl+left
+    Increase        cmdctrl+= =
+    Decrease        cmdctrl+- -
+    Reset           cmdctrl+0 0
+    

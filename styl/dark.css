@@ -1,0 +1,73 @@
+/*
+0000000     0000000   00000000   000   000  
+000   000  000   000  000   000  000  000   
+000   000  000000000  0000000    0000000    
+000   000  000   000  000   000  000  000   
+0000000    000   000  000   000  000   000  
+*/
+#main {
+  background: #222;
+  color: #fff;
+}
+.kachel {
+  border-bottom-color: #212121;
+}
+.sysdish_disk_bgr {
+  fill: #1e1e1e;
+}
+.sysdish_disk_read {
+  fill: #88f;
+}
+.sysdish_disk_write {
+  fill: #22f;
+}
+.sysdish_net_recv {
+  fill: #080;
+}
+.sysdish_net_send {
+  fill: #0a0;
+}
+.sysdish_load_bgr {
+  fill: #1e1e1e;
+}
+.sysdish_load_sys {
+  fill: #f80;
+}
+.sysdish_load_usr {
+  fill: #ff0;
+}
+.sysdish_mem_used {
+  fill: #22f;
+}
+.sysdish_mem_active {
+  fill: #88f;
+}
+.face {
+  fill: #1e1e1e;
+}
+.hour {
+  stroke: #f80;
+  stroke-linecap: round;
+  stroke-width: 3;
+}
+.minute {
+  stroke: #f00;
+  stroke-linecap: round;
+  stroke-width: 2;
+}
+.second {
+  stroke: #08f;
+  stroke-linecap: round;
+}
+.alarm-hour {
+  color: #f80;
+}
+.alarm-minute {
+  color: #08f;
+}
+.alarm-minute:before {
+  color: #333;
+}
+.alarm-second {
+  color: #333;
+}

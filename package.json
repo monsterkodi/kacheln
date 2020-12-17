@@ -1,0 +1,22 @@
+{
+  "name": "kacheln",
+  "version": "0.1.0",
+  "description": "dock",
+  "author": "monsterkodi",
+  "license": "Unlicense",
+  "main": "js/main.js",
+  "repository": "github:monsterkodi/kacheln",
+  "bugs": {
+    "url": "https://github.com/monsterkodi/kacheln/issues"
+  },
+  "dependencies": {
+    "kxk": "^0.397.0",
+    "systeminformation": "^4.32.0",
+    "wxw": "^1.88.0"
+  },
+  "devDependencies": {
+    "electron": "^11.1.0",
+    "electron-packager": "^15.2.0",
+    "electron-rebuild": "^2.3.4"
+  }
+}

@@ -1,0 +1,106 @@
+
+//  0000000  000000000  000   000  000    
+// 000          000      000 000   000    
+// 0000000      000       00000    000    
+//      000     000        000     000    
+// 0000000      000        000     0000000
+
+@font-face 
+    font-family     titlebarFont
+    font-weight     normal
+    font-style      normal
+    src             url("../../node_modules/kxk/styl/Bahnschrift.woff")
+
+// 0000000     0000000   0000000    000   000
+// 000   000  000   000  000   000   000 000 
+// 0000000    000   000  000   000    00000  
+// 000   000  000   000  000   000     000   
+// 0000000     0000000   0000000       000   
+
+fill-abs()
+    position            absolute
+    bottom              0
+    right               0
+    left                0
+    top                 0
+
+*
+    outline-width       0
+    
+body
+    fill-abs()
+    font-family          titlebarFont
+    font-size            15px
+    margin               0
+    overflow             hidden
+    -webkit-app-region   drag
+    -webkit-user-select  none
+
+// 00     00   0000000   000  000   000  
+// 000   000  000   000  000  0000  000  
+// 000000000  000000000  000  000 0 000  
+// 000 0 000  000   000  000  000  0000  
+// 000   000  000   000  000  000   000  
+
+#main
+    -webkit-app-region   drag
+    overflow            hidden
+    position            absolute
+    pointer-events      all
+    top                 0
+    left                0
+    right               0
+    bottom              0
+
+.kachel
+    -webkit-app-region  no-drag
+    min-width           64px
+    border-bottom       1px solid
+    position            relative
+    
+    &.Appl
+        display         inline-grid
+        max-width       50%
+    
+// 000  00     00   0000000   
+// 000  000   000  000        
+// 000  000000000  000  0000  
+// 000  000 0 000  000   000  
+// 000  000   000   0000000   
+
+.kachelImg
+    margin              auto
+    width               70%
+    height              70%
+    cursor              pointer
+    &.inactive
+        opacity         0.2
+    
+//  0000000   00000000   00000000   000      
+// 000   000  000   000  000   000  000      
+// 000000000  00000000   00000000   000      
+// 000   000  000        000        000      
+// 000   000  000        000        0000000  
+
+.applicon
+    margin              10%
+    width               80%
+    cursor              pointer
+
+.annyicon
+    cursor              pointer
+
+.appname
+    position            absolute
+    text-align          center
+    
+.appldot
+    position            absolute
+    left                0
+    bottom              0
+    width               8px
+    height              8px
+    & .applcircle
+        stroke-width    2
+        stroke          url(#appldotstroke)
+    
