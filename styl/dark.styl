@@ -9,12 +9,21 @@
 bgColor   = #222222
 darkColor = #1e1e1e
 
+bgHover   = #202020
+bgFocus   = #333333
+
 #main
     background          bgColor
     color               #fff
 
 .kachel
     border-bottom-color   #212121
+    
+    &.kachelHover
+        background-color    bgHover
+    
+    &.kachelFocus
+        background-color    bgFocus
     
 //  0000000  000   000   0000000  0000000    000   0000000  000   000  
 // 000        000 000   000       000   000  000  000       000   000  
@@ -68,18 +77,20 @@ darkColor = #1e1e1e
     stroke              #08f
     stroke-linecap      round
     
-//  0000000   000       0000000   00000000   00     00  
-// 000   000  000      000   000  000   000  000   000  
-// 000000000  000      000000000  0000000    000000000  
-// 000   000  000      000   000  000   000  000 0 000  
-// 000   000  0000000  000   000  000   000  000   000  
+//  0000000   00000000   00000000   000      
+// 000   000  000   000  000   000  000      
+// 000000000  00000000   00000000   000      
+// 000   000  000        000        000      
+// 000   000  000        000        0000000  
 
-.alarm-hour
-    color               #f80
-.alarm-minute
-    color               #08f
-    &:before
-        color           #333
-.alarm-second
-    color               #333
-    
+.appldot
+    fill                #181818
+    &.normal
+        fill            #333
+    &.maximized
+        fill            #555
+    &.minimized
+        fill            #161616
+    &.top
+        fill            #f80
+        

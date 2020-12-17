@@ -6,7 +6,7 @@
 000   0000000   0000000   000   000  
 ###
 
-{ fs, slash } = require 'kxk'
+{ fs, os, slash } = require 'kxk'
 
 wxw = require 'wxw'
 
@@ -40,7 +40,10 @@ fakeIcon = (exePath, pngPath) ->
     
 appIcon = (exePath, pngPath) ->
     
-    if not fakeIcon(exePath, pngPath)
+    if os.platform() == 'win32'
+        if not fakeIcon(exePath, pngPath)
+            wxw 'icon' exePath, pngPath
+    else
         wxw 'icon' exePath, pngPath
         
 module.exports = appIcon

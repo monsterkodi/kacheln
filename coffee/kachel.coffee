@@ -6,7 +6,7 @@
 000   000  000   000   0000000  000   000  00000000  0000000    
 ###
 
-{ $, app, drag, elem, klog, open, os, slash, stopEvent } = require 'kxk'
+{ $, app, elem, keyinfo, open, os, slash, stopEvent } = require 'kxk'
 
 class Kachel
 
@@ -14,17 +14,36 @@ class Kachel
     
         @main =$ '#main'
         @div  = elem class:"kachel #{@constructor.name}" 
-        
+        @div.setAttribute 'tabindex' '0'
+        @div.onkeydown    = @onKeyDown
+        @div.onmouseenter = @onHover
+        @div.onmouseleave = @onLeave
+        @div.onfocus      = @onFocus
+        @div.onblur       = @onBlur
         @main.appendChild @div
-        
+        @div.kachel = @
         @div.addEventListener 'mousedown' @onLeftClick
-        
-        # @drag = new drag
-            # target:   @div
-            # onStart:  @onDragStart
-            # onMove:   @onDragMove
-            # onStop:   @onDragStop
+                    
+    onKeyDown: (event) => 
+    
+        key = keyinfo.forEvent(event).key
+        switch key
+            when 'enter'  then @onLeftClick event
+            when 'left' 'right' 'up' 'down'
+                @neighborKachel(key)?.focus()
                 
+    neighborKachel: (direction) ->
+        
+        br = @div.getBoundingClientRect()
+        if br.width < 100
+            switch direction
+                when 'down' then return @div.nextSibling.nextSibling
+                when 'up'   then return @div.previousSibling.previousSibling
+
+        switch direction
+            when 'left'  'up'    then @div.previousSibling
+            when 'right' 'down'  then @div.nextSibling
+            
     # 00000000   00000000   0000000   000   000  00000000   0000000  000000000
     # 000   000  000       000   000  000   000  000       000          000   
     # 0000000    0000000   000 00 00  000   000  0000000   0000000      000   
@@ -33,24 +52,6 @@ class Kachel
     
     onContextMenu: (event) => stopEvent event 
     
-    # 0000000    00000000    0000000    0000000   
-    # 000   000  000   000  000   000  000        
-    # 000   000  0000000    000000000  000  0000  
-    # 000   000  000   000  000   000  000   000  
-    # 0000000    000   000  000   000   0000000   
-    
-    onDragStart: (drag, event) =>
-    
-        klog 'onDragStart'
-        
-    onDragMove: (drag, event) =>
-        
-        klog 'onDragMove'
-
-    onDragStop: (drag, event) =>
-
-        klog 'onDragStop'
-                    
     # 000   0000000   0000000   000   000  
     # 000  000       000   000  0000  000  
     # 000  000       000   000  000 0 000  
@@ -90,15 +91,9 @@ class Kachel
     
     onHover: (event) => @div.classList.add 'kachelHover'
     onLeave: (event) => @div.classList.remove 'kachelHover'
+    onFocus: (event) => @div.classList.add 'kachelFocus'
+    onBlur:  (event) => @div.classList.remove 'kachelFocus'
         
-    onLoad:        -> # to be overridden in subclasses
-    onShow:        -> # to be overridden in subclasses
-    onMove:        -> # to be overridden in subclasses
-    onFocus:       -> # to be overridden in subclasses
-    onBlur:        -> # to be overridden in subclasses
-    onMove:        -> # to be overridden in subclasses
-    onClose:       -> # to be overridden in subclasses
-    onBounds:      -> # to be overridden in subclasses
     onLeftClick:   -> # to be overridden in subclasses
     onMiddleClick: -> # to be overridden in subclasses
     onRightClick:  -> # to be overridden in subclasses

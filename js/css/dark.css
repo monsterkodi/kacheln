@@ -12,6 +12,12 @@
 .kachel {
   border-bottom-color: #212121;
 }
+.kachel.kachelHover {
+  background-color: #202020;
+}
+.kachel.kachelFocus {
+  background-color: #333;
+}
 .sysdish_disk_bgr {
   fill: #1e1e1e;
 }
@@ -59,15 +65,18 @@
   stroke: #08f;
   stroke-linecap: round;
 }
-.alarm-hour {
-  color: #f80;
+.appldot {
+  fill: #181818;
 }
-.alarm-minute {
-  color: #08f;
+.appldot.normal {
+  fill: #333;
 }
-.alarm-minute:before {
-  color: #333;
+.appldot.maximized {
+  fill: #555;
 }
-.alarm-second {
-  color: #333;
+.appldot.minimized {
+  fill: #161616;
+}
+.appldot.top {
+  fill: #f80;
 }

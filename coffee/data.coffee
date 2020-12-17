@@ -6,7 +6,7 @@
 0000000    000   000     000     000   000
 ###
 
-{ _, childp, empty, klog, kpos, kstr, last, os, post, slash, udp, win } = require 'kxk'
+{ $, _, childp, empty, klog, kpos, last, os, post, slash, udp, win } = require 'kxk'
 
 sysinfo  = require 'systeminformation'
 electron = require 'electron'
@@ -16,20 +16,18 @@ class Data
 
     @: ->
         
-        if os.platform() == 'win32'
-            @hookProc  = wxw 'hook' 'proc'
-            @hookInput = wxw 'hook' 'input'
-            @hookInfo  = wxw 'hook' 'info'
+        @detach()
+        
+        #  @hookProc  = wxw 'hook' 'proc'
+        @hookInfo  = wxw 'hook' 'info'
+        #  @hookInput = wxw 'hook' 'input'
             
         @providers = 
             # mouse:      new Mouse
-            # keyboard:   new Keyboard
             # apps:       new Apps
-            # wins:       new Wins
+            wins:       new Wins
             clock:      new Clock 
             sysinfo:    new Sysinfo
-        
-        # post.on 'requestData' @onRequestData
         
     start: ->
         
@@ -39,18 +37,24 @@ class Data
         setTimeout @slowTick, 1000
         
     detach: ->
+        
         if os.platform() == 'win32'
             wxw 'kill' 'wc.exe'
-        # else
-            # klog wxw 'kill' 'mc'
+        else
+            wxw 'kill' 'mc'
             
+    # 000   000  0000000    00000000   
+    # 000   000  000   000  000   000  
+    # 000   000  000   000  00000000   
+    # 000   000  000   000  000        
+    #  0000000   0000000    000        
+    
     onUDP: (msg) => 
         
         switch msg.event
-            when 'mousedown' 'mousemove' 'mouseup' 'mousewheel' then @providers.mouse.onEvent msg
-            when 'keydown' 'keyup' then @providers.keyboard.onEvent msg
-            when 'proc' then @providers.apps.onEvent msg
-            when 'info' then @providers.wins.onEvent msg
+            when 'mousedown' 'mousemove' 'mouseup' 'mousewheel' then @providers.mouse?.onEvent msg
+            when 'proc' then @providers.apps?.onEvent msg
+            when 'info' then @providers.wins?.onEvent msg
             # else log msg
         
     slowTick: =>
@@ -61,11 +65,6 @@ class Data
                 
         setTimeout @slowTick, 1000 - (new Date).getMilliseconds()
         
-    send: (provider, data) =>
-         
-        for receiver in provider.receivers
-            post.toWin receiver, 'data' data
-            
 #  0000000  000       0000000    0000000  000   000  
 # 000       000      000   000  000       000  000   
 # 000       000      000   000  000       0000000    
@@ -74,7 +73,7 @@ class Data
 
 class Clock
         
-    @: (@name='clock' @tick='slow' @receivers=[]) -> 
+    @: (@name='clock' @tick='slow') -> 
         
     onTick: (data) =>
 
@@ -84,18 +83,10 @@ class Clock
         minutes = time.getMinutes()
         seconds = time.getSeconds()
         
-        hourStr   = kstr.lpad hours,   2 '0'
-        minuteStr = kstr.lpad minutes, 2 '0'
-        secondStr = kstr.lpad seconds, 2 '0'
-        
         post.emit 'clock',
             hour:   hours
             minute: minutes
             second: seconds
-            str:
-                    hour:   hourStr
-                    minute: minuteStr
-                    second: secondStr
                                      
 #  0000000  000   000   0000000  000  000   000  00000000   0000000   
 # 000        000 000   000       000  0000  000  000       000   000  
@@ -105,14 +96,17 @@ class Clock
 
 class Sysinfo
         
-    @: (@name='sysinfo' @tick='slow' @receivers=[]) ->
+    @: (@name='sysinfo' @tick='slow') ->
         
         fork = childp.fork "#{__dirname}/memnet"
         fork.on 'message' @onMessage
         
-    onMessage: (m) => @data = JSON.parse m
+    onMessage: (m) => 
         
-    onTick: (data) => if @data then post.emit 'sysinfo' @data
+        @data = JSON.parse m
+        post.emit 'sysinfo' @data
+        
+    onTick: (data) => # if @data then post.emit 'sysinfo' @data
         
 # 00     00   0000000   000   000   0000000  00000000  
 # 000   000  000   000  000   000  000       000       
@@ -122,7 +116,7 @@ class Sysinfo
 
 class Mouse
     
-    @: (@name='mouse' @receivers=[]) ->
+    @: (@name='mouse') ->
                 
         @last = Date.now()
         @interval = parseInt 1000/60
@@ -143,34 +137,15 @@ class Mouse
             if os.platform() == 'win32'
                 pos = kpos(electron.screen.screenToDipPoint pos).rounded()
             
-            # bounds = require './bounds'
-            # pos = pos.clamp kpos(0,0), kpos bounds.screenWidth, bounds.screenHeight
-            
             event.x = pos.x
             event.y = pos.y
             
-            klog 'mouse' event.x, event.y
+            # klog 'mouse' event.x, event.y
         
             post.emit 'mouse' event
         else
             @sendTimer = setTimeout (=> @onEvent @lastEvent), @interval
-        
-# 000   000  00000000  000   000  0000000     0000000    0000000   00000000   0000000    
-# 000  000   000        000 000   000   000  000   000  000   000  000   000  000   000  
-# 0000000    0000000     00000    0000000    000   000  000000000  0000000    000   000  
-# 000  000   000          000     000   000  000   000  000   000  000   000  000   000  
-# 000   000  00000000     000     0000000     0000000   000   000  000   000  0000000    
-
-class Keyboard
-    
-    @: (@name='keyboard' @receivers=[]) ->
-        
-    onEvent: (event) =>
-        
-        post.toMain @name, event
-        for receiver in @receivers
-            post.toWin receiver, @name, event
-        
+                
 # 0000000     0000000   000   000  000   000  0000000     0000000  
 # 000   000  000   000  000   000  0000  000  000   000  000       
 # 0000000    000   000  000   000  000 0 000  000   000  0000000   
@@ -203,7 +178,7 @@ class Bounds
 
 class Apps
     
-    @: (@name='apps' @receivers=[]) ->
+    @: (@name='apps') ->
         
         @lastApps = null        
         
@@ -222,10 +197,7 @@ class Apps
                  
         apps.sort()
         if not _.isEqual apps, @lastApps
-            post.toMain 'apps' apps
-            for receiver in @receivers
-                post.toWin receiver, 'data' apps
-             
+            klog 'apps' apps
             @lastApps = apps
         
 # 000   000  000  000   000   0000000  
@@ -236,10 +208,17 @@ class Apps
 
 class Wins
     
-    @: (@name='wins' @receivers=[]) ->
+    @: (@name='wins') ->
         
         @lastWins = null
 
+    kacheln: ->
+        
+        kl = []
+        for i in 0...$('#main').children.length
+            kl.push $('#main').children[i].kachel
+        kl
+        
     onEvent: (event) =>
         
         wins = event.info
@@ -248,13 +227,21 @@ class Wins
             for win in wins
                 if win.index == 0
                     win.status += ' top'
+                else if win.index < 0
+                    win.status = 'minimized'
                     
         wins.pop() if empty last wins
         if not _.isEqual wins, @lastWins
-            post.toMain 'wins' wins
-            for receiver in @receivers
-                post.toWin receiver, 'data' apps
+            # klog wins
             @lastWins = wins
+            
+            for k in @kacheln()
+                for win in wins
+                    if k?.status? and win.path == k.kachelId
+                        # klog "#{k.kachelId} #{win.status}"
+                        k.activated = true
+                        k.status = win.status
+                        k.updateDot()
     
 module.exports = Data
 

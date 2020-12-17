@@ -6,15 +6,13 @@
 00     00  000  000   000  0000000     0000000   00     00  
 ###
 
-{ win } = require 'kxk'
+{ $, post, win } = require 'kxk'
 
 w = new win
     dir:    __dirname
     pkg:    require '../package.json'
     icon:   '../img/menu@2x.png'
     prefsSeperator: '▸'
-
-# window.win.on 'resize' (event) -> klog 'resize' event.sender.getSize()
 
 #  0000000   000   000  000       0000000    0000000   0000000
 # 000   000  0000  000  000      000   000  000   000  000   000
@@ -24,6 +22,8 @@ w = new win
 
 window.onload = ->
 
+    post.setMaxListeners 30
+    
     Data = require './data'
     data = new Data
     
@@ -43,8 +43,12 @@ window.onload = ->
     new Appl '/Users/kodi/s/knot/knot-darwin-x64/knot.app'
     new Appl '/Users/kodi/s/turtle/password-turtle-darwin-x64/password-turtle.app'
     new Appl '/Users/kodi/s/keks/keks-darwin-x64/keks.app'
-    new Appl '/Users/kodi/s/kalk/kalk-darwin-x64/kalk.app'
     new Appl '/Applications/Firefox.app'
+    new Appl '/System/Applications/Mail.app'
     new Appl '/Applications/iTerm2.app'
+    new Appl '/Users/kodi/s/kalk/kalk-darwin-x64/kalk.app'
+    
+    main =$ '#main'
+    main.onfocus = -> $('#main').children[4]?.focus()
     
     data.start()

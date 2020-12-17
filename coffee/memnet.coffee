@@ -14,16 +14,20 @@ w_max  = 100
 rx_max = 100
 tx_max = 100
 
+animTimer = null
+
 tick = ->
+    
+    clearTimeout animTimer
     
     sysinfo.getDynamicData (d) =>
     
-        if Math.abs(d.networkStats[0].ms - 1000) > 100 # don't trust those values with wrong ms time span
-            rx_sec = Math.min rx_max, parseInt d.networkStats[0].rx_sec
-            tx_sec = Math.min tx_max, parseInt d.networkStats[0].tx_sec
-        else
-            rx_sec = parseInt d.networkStats[0].rx_sec
-            tx_sec = parseInt d.networkStats[0].tx_sec
+        # if Math.abs(d.networkStats[0].ms - 1000) > 100 # don't trust those values with wrong ms time span
+            # rx_sec = Math.min rx_max, parseInt d.networkStats[0].rx_sec
+            # tx_sec = Math.min tx_max, parseInt d.networkStats[0].tx_sec
+        # else
+        rx_sec = parseInt d.networkStats[0].rx_sec
+        tx_sec = parseInt d.networkStats[0].tx_sec
         
         rx_max = Math.max rx_max, rx_sec
         tx_max = Math.max tx_max, tx_sec
@@ -62,6 +66,6 @@ tick = ->
         
         process.send JSON.stringify nd
         
-    setTimeout tick, 1000 - (new Date).getMilliseconds()
+        animTimer = setTimeout tick, 10000
 
 tick()

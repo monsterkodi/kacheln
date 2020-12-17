@@ -68,17 +68,13 @@ class Appl extends Kachel
     
     updateDot: ->
         
-        dot =$ '.appldot'
+        dot =$ '.appldot' @div
         
         if @activated and not dot
-            dot = utils.svg width:16 height:16 clss:'appldot'
-            defs = utils.append dot, 'defs'
-            grd = utils.append defs, 'linearGradient', id:'appldotstroke' x1:"0%" y1:"0%" x2:"100%" y2:"100%"
-            stp = utils.append grd, 'stop' offset:"0%" 'stop-color':"#0a0a0a"
-            stp = utils.append grd, 'stop' offset:"100%" 'stop-color':"#202020"
-            grp = utils.append dot, 'g'
-            crc = utils.append grp, 'circle' cx:0 cy:0 r:7 class:'applcircle'
-            @main.appendChild dot
+            dot  = utils.svg width:16 height:16 clss:'appldot'
+            grp  = utils.append dot, 'g'
+            crc  = utils.append grp, 'circle' cx:0 cy:0 r:7 class:'applcircle'
+            @div.appendChild dot
         else if not @activated and dot
             dot?.remove()
             dot = null

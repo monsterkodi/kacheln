@@ -6,7 +6,7 @@
 0000000      000     0000000   0000000    000  0000000   000   000  
 ###
 
-{ clamp, deg2rad, elem, empty, klog, post } = require 'kxk'
+{ clamp, deg2rad, post } = require 'kxk'
 
 utils   = require './utils'
 Kachel  = require './kachel'
@@ -19,11 +19,6 @@ class Sysdish extends Kachel
         
         @animCount = 0
         
-        @history = 
-            net: []
-            dsk: []
-            cpu: []
-            
         @colors =
             dsk: [[128 128 255] [ 64  64 255]]
             net: [[  0 150   0] [  0 255   0]]
@@ -36,7 +31,7 @@ class Sysdish extends Kachel
         
         post.on 'sysinfo' @onData
         
-        @dishMode()
+        @initDish()
     
     #  0000000  000      000   0000000  000   000  
     # 000       000      000  000       000  000   
@@ -46,23 +41,7 @@ class Sysdish extends Kachel
     
     onRightClick: => @onLeftClick()
     onLeftClick: =>
-        
-        if @mode == 'dish' then @graphMode()
-        else @dishMode()
-        
-    graphMode: ->
-        
-        @mode = 'graph'
-        @onBounds()
-        @drawGraph()
-        
-    dishMode: ->
-                
-        @mode = 'dish'
-        @initDish()
-        @drawDish()
-        @animDish()
-        
+                        
     #  0000000   000   000  0000000     0000000   000000000   0000000   
     # 000   000  0000  000  000   000  000   000     000     000   000  
     # 000   000  000 0 000  000   000  000000000     000     000000000  
@@ -71,61 +50,9 @@ class Sysdish extends Kachel
     
     onData: (@data) =>
             
-        for n in ['dsk' 'net' 'cpu']
-            hist = @history[n]
-            switch n
-                when 'dsk' 
-                    if @data.dsk? 
-                                hist.push [@data.dsk.r_fac,  @data.dsk.w_fac]
-                    else
-                                klog @data
-                                # hist.push [@data.mem.active/@data.mem.total, @data.mem.used/@data.mem.total]
-                when 'cpu' then hist.push [@data.cpu.sys,    @data.cpu.usr]
-                when 'net' then hist.push [@data.net.rx_fac, @data.net.tx_fac]
-             
-            hist.shift() while hist.length > @width
-                
-        if @mode == 'dish'
-            @drawDish()
-            @animDish()
-        else
-            @drawGraph()
+        @drawDish()
+        @animDish()
         
-    # 0000000    00000000    0000000   000   000   0000000   00000000    0000000   00000000   000   000  
-    # 000   000  000   000  000   000  000 0 000  000        000   000  000   000  000   000  000   000  
-    # 000   000  0000000    000000000  000000000  000  0000  0000000    000000000  00000000   000000000  
-    # 000   000  000   000  000   000  000   000  000   000  000   000  000   000  000        000   000  
-    # 0000000    000   000  000   000  00     00   0000000   000   000  000   000  000        000   000  
-    
-    drawGraph: ->
-        
-        for n in ['dsk' 'net' 'cpu']
-            
-            hist = @history[n]
-            continue if empty hist
-                        
-            canvas = @canvas[n]
-            canvas.height = canvas.height
-            ctx = canvas.getContext '2d'
-            
-            for m in [0,1]
-                ctx.fillStyle = "rgb(#{@colors[n][m][0]}, #{@colors[n][m][1]}, #{@colors[n][m][2]})"
-                for i in [0...hist.length]
-                    if n == 'cpu'
-                        if m
-                            h = @height * (hist[i][0]-hist[i][1])
-                            l = @height * hist[i][0]
-                            ctx.fillRect @width-hist.length+i, @height-l, 1, h
-                        else
-                            h = @height * hist[i][1]
-                            ctx.fillRect @width-hist.length+i, @height-h, 2, h
-                    else
-                        h = hist[i][m] * @height/2
-                        if m 
-                            ctx.fillRect @width-hist.length+i, @height/2-h, 2, h
-                        else
-                            ctx.fillRect @width-hist.length+i, @height/2, 2, h
-                
     #  0000000   000   000  000  00     00  0000000    000   0000000  000   000  
     # 000   000  0000  000  000  000   000  000   000  000  000       000   000  
     # 000000000  000 0 000  000  000000000  000   000  000  0000000   000000000  
@@ -184,8 +111,7 @@ class Sysdish extends Kachel
             pie360 @memuPie, 18, @memuNow
             pie360 @memaPie, 18, @memaNow
                             
-        if @mode == 'dish'
-            @animTimer = setTimeout @animDish, 1000 / 30
+        @animTimer = setTimeout @animDish, parseInt 10000 / 30
     
     # 000  000   000  000  000000000  0000000    000   0000000  000   000  
     # 000  0000  000  000     000     000   000  000  000       000   000  
@@ -198,12 +124,11 @@ class Sysdish extends Kachel
         @div.innerHTML = ''
         svg = utils.svg clss:'dish'
         @div.appendChild svg
-        pie = svg
+
         pie = utils.circle radius:45 clss:'sysdish_disk_bgr' svg:svg
         @dskrPie = utils.pie svg:svg, radius:40 clss:'sysdish_disk_read'  angle:0
         @dskwPie = utils.pie svg:svg, radius:40 clss:'sysdish_disk_write' angle:0, start:180
         
-        # pie = utils.circle radius:42 clss:'sysdish_net_bgr' svg:svg
         @netrPie = utils.pie svg:svg, radius:40 clss:'sysdish_net_recv' angle:0
         @nettPie = utils.pie svg:svg, radius:40 clss:'sysdish_net_send' angle:0 start:180
             
@@ -211,10 +136,8 @@ class Sysdish extends Kachel
         @sysPie = utils.pie svg:pie, radius:40 clss:'sysdish_load_sys' angle:0
         @usrPie = utils.pie svg:pie, radius:40 clss:'sysdish_load_usr' angle:0
 
-        # pie = utils.circle radius:18 clss:'sysdish_mem_bgr' svg:svg
         @memuPie = utils.pie svg:svg, radius:40 clss:'sysdish_mem_used'   angle:0
         @memaPie = utils.pie svg:svg, radius:40 clss:'sysdish_mem_active' angle:0
-            
         
      # 0000000    00000000    0000000   000   000  0000000    000   0000000  000   000
      # 000   000  000   000  000   000  000 0 000  000   000  000  000       000   000
@@ -226,6 +149,8 @@ class Sysdish extends Kachel
 
          return if not @data
 
+         clearTimeout @animTimer
+         
          @animCount = 0
 
          if @data.dsk?
@@ -253,34 +178,5 @@ class Sysdish extends Kachel
 
          @memuNew = 360*@data.mem.used/@data.mem.total
          @memaNew = 360*@data.mem.active/@data.mem.total
-        
-    # 0000000     0000000   000   000  000   000  0000000     0000000  
-    # 000   000  000   000  000   000  0000  000  000   000  000       
-    # 0000000    000   000  000   000  000 0 000  000   000  0000000   
-    # 000   000  000   000  000   000  000  0000  000   000       000  
-    # 0000000     0000000    0000000   000   000  0000000    0000000   
-    
-    onBounds: ->
-        
-        return if @mode != 'graph'
-        
-        @main.innerHTML = ''
-        
-        br = @main.getBoundingClientRect()
-        w = parseInt br.width
-        h = parseInt br.height/3
-        
-        @width  = w*2
-        @height = h*2
-        
-        @canvas = {}            
-        for n in ['dsk' 'net' 'cpu']
-            canvas = elem 'canvas' class:"histCanvas" width:@width-1 height:@height
-            x = parseInt -@width/4
-            y = parseInt -@height/4
-            canvas.style.transform = "translate3d(#{x}px, #{y}px, 0px) scale3d(0.5, 0.5, 1)"
-            canvas.style.top = @tops[n]
-            @main.appendChild canvas
-            @canvas[n] = canvas
-        
+                
 module.exports = Sysdish

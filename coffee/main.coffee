@@ -55,7 +55,7 @@ KachelApp = new app
         
         w.webContents.openDevTools(mode:'detach') if args.devtools
         
-        electron.powerSaveBlocker.start 'prevent-app-suspension'
+        # electron.powerSaveBlocker.start 'prevent-app-suspension'
         
         mainWin = w
         w.setHasShadow false

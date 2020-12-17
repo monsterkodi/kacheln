@@ -17,11 +17,10 @@ body {
   font-size: 15px;
   margin: 0;
   overflow: hidden;
-  -webkit-app-region: drag;
+  -webkit-app-region: no-drag;
   -webkit-user-select: none;
 }
 #main {
-  -webkit-app-region: drag;
   overflow: hidden;
   position: absolute;
   pointer-events: all;
@@ -35,6 +34,7 @@ body {
   min-width: 64px;
   border-bottom: 1px solid;
   position: relative;
+  pointer-events: all;
 }
 .kachel.Appl {
   display: inline-grid;
@@ -54,21 +54,13 @@ body {
   width: 80%;
   cursor: pointer;
 }
-.annyicon {
-  cursor: pointer;
-}
-.appname {
-  position: absolute;
-  text-align: center;
-}
 .appldot {
   position: absolute;
-  left: 0;
-  bottom: 0;
+  left: 4px;
+  bottom: 4px;
   width: 8px;
   height: 8px;
 }
 .appldot .applcircle {
-  stroke-width: 2;
-  stroke: url("#appldotstroke");
+  stroke-width: 0;
 }
