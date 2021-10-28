@@ -106,7 +106,7 @@ class Appl extends Kachel
     
     onInitKachel: (@kachelId) =>
             
-        iconDir = slash.join slash.userData(), 'icons'
+        iconDir = slash.join post.get('userData'), 'icons'
         appName = slash.base @kachelId
         iconPath = "#{iconDir}/#{appName}.png"
                 
@@ -129,7 +129,7 @@ class Appl extends Kachel
         
     refreshIcon: =>
         
-        iconDir = slash.join slash.userData(), 'icons'
+        iconDir = slash.join post.get('userData'), 'icons'
         appName = slash.base @kachelId
         pngPath = slash.resolve slash.join iconDir, appName + ".png"
         

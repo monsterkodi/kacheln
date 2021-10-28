@@ -6,7 +6,7 @@
 00     00  000  000   000  0000000     0000000   00     00  
 ###
 
-{ $, post, win } = require 'kxk'
+{ $, drag, post, win } = require 'kxk'
 
 w = new win
     dir:    __dirname
@@ -19,6 +19,9 @@ w = new win
 # 000   000  000 0 000  000      000   000  000000000  000   000
 # 000   000  000  0000  000      000   000  000   000  000   000
 #  0000000   000   000  0000000   0000000   000   000  0000000
+
+dragBounds = null
+winDrag = null
 
 window.onload = ->
 
@@ -34,21 +37,40 @@ window.onload = ->
     dish = new Dish
     
     Konrad = require './konrad'
-    new Konrad '/Users/kodi/s/konrad/konrad-darwin-x64/konrad.app'
+    new Konrad '/Applications/konrad.app'
     
     Appl = require './appl'
-    new Appl '/Users/kodi/s/clippo/clippo-darwin-x64/clippo.app'
-    new Appl '/Users/kodi/s/ko/ko-darwin-x64/ko.app'
-    new Appl '/Users/kodi/s/klog/klog-darwin-x64/klog.app'
-    new Appl '/Users/kodi/s/knot/knot-darwin-x64/knot.app'
-    new Appl '/Users/kodi/s/turtle/password-turtle-darwin-x64/password-turtle.app'
-    new Appl '/Users/kodi/s/keks/keks-darwin-x64/keks.app'
-    new Appl '/Applications/Firefox.app'
-    new Appl '/System/Applications/Mail.app'
+    new Appl '/Applications/clippo.app'
+    new Appl '/Applications/ko.app'
+    new Appl '/Applications/kalk.app'
     new Appl '/Applications/iTerm2.app'
-    new Appl '/Users/kodi/s/kalk/kalk-darwin-x64/kalk.app'
+    new Appl '/Applications/klog.app'
+    # new Appl '/Applications/knot.app'
+    new Appl '/Applications/password-turtle.app'
+    # new Appl '/Users/kodi/s/keks/keks-darwin-x64/keks.app'
+    new Appl '/System/Applications/Mail.app'
+    new Appl '/Applications/Firefox.app'
     
-    main =$ '#main'
     main.onfocus = -> $('#main').children[4]?.focus()
     
     data.start()
+    
+    # 0000000    00000000    0000000    0000000   
+    # 000   000  000   000  000   000  000        
+    # 000   000  0000000    000000000  000  0000  
+    # 000   000  000   000  000   000  000   000  
+    # 0000000    000   000  000   000   0000000   
+    
+    winDrag = new drag
+        target:     document.body
+        handle:     $('#main')
+        stopEvent:  false
+        onStart:    -> dragBounds = window.win.getBounds()
+        onMove:     (drag) ->
+            if dragBounds
+                window.win.setBounds
+                    x:      dragBounds.x + drag.deltaSum.x 
+                    y:      dragBounds.y + drag.deltaSum.y 
+                    width:  dragBounds.width 
+                    height: dragBounds.height
+    

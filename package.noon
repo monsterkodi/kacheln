@@ -1,17 +1,18 @@
 name            kacheln
-version         0.1.0
+version         0.1.1
 description     dock
 author          monsterkodi
 license         Unlicense
 main            js/main.js
 repository      github:monsterkodi/kacheln
-bugs
-                url  https://github.com/monsterkodi/kacheln/issues
+build
+                asar  false
+                mac
+                  icon  img/app.icns
 dependencies
-                kxk             ^0.397.0
-                systeminformation  ^4.32.0
-                wxw             ^1.88.0
+                kxk             ^0.413.0
+                systeminformation  ^5.9.9
+                wxw             ^1.89.0
 devDependencies
-                electron        ^11.1.0
-                electron-packager  ^15.2.0
-                electron-rebuild  ^2.3.4
+                electron        ^15.3.0
+                electron-builder  ^22.13.1

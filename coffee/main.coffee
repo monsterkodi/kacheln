@@ -35,14 +35,14 @@ mainMenu = electron.Menu.buildFromTemplate [
 KachelApp = new app
     pkg:                pkg
     dir:                __dirname
-    shortcut:           slash.win() and 'Ctrl+F2' or 'F2'
+    shortcut:           slash.win() and 'Ctrl+F2' or 'F12'
     index:              './index.html'
     icon:               '../img/app.ico'
     tray:               '../img/menu.png'
     about:              '../img/about.png'
     menu:               mainMenu
-    width:              168
-    height:             256
+    width:              132
+    height:             1024
     minWidth:           64
     maxWidth:           256
     maximizable:        false
@@ -60,8 +60,8 @@ KachelApp = new app
         mainWin = w
         w.setHasShadow false
                 
-        if os.platform() == 'win32'
-            keys = 
+        if os.platform() == 'win32' 
+            keys = # fake divvy
                 left:       'alt+ctrl+left'
                 right:      'alt+ctrl+right'
                 up:         'alt+ctrl+up'
@@ -79,7 +79,7 @@ KachelApp = new app
                 appswitch:  'ctrl+tab'
                 screenzoom: 'alt+z'
                 
-            electron.globalShortcut.register 'F13' -> action 'taskbar'
+            electron.globalShortcut.register 'F11' -> action 'taskbar'
             
             keys = prefs.get 'keys' keys
             prefs.set 'keys' keys

@@ -13,6 +13,7 @@ wxw = require 'wxw'
 moveWin = (dir) ->
     
     screen = wxw 'screen' 'user'
+    klog "moveWin #{dir}" screen
     ar = w:screen.width, h:screen.height
     
     if os.platform() == 'win32'
