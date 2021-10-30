@@ -48,6 +48,12 @@
 .sysdish_mem_active {
   fill: #88f;
 }
+.battery_bg {
+  fill: #000;
+}
+.core_bg {
+  fill: #1a1a1a;
+}
 .face {
   fill: #1e1e1e;
 }

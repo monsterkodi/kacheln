@@ -8,8 +8,8 @@
 
 { post } = require 'kxk'
 
-utils   = require './utils'
 Kachel  = require './kachel'
+utils   = require './utils'
 
 class Clock extends Kachel
         
@@ -41,8 +41,8 @@ class Clock extends Kachel
         
         face = utils.circle radius:45 clss:'face' svg:svg
         
-        @hour   = utils.append face, 'line' y1:0 y2:-32 class:'hour' 
-        @minute = utils.append face, 'line' y1:0 y2:-42 class:'minute'
-        @second = utils.append face, 'line' y1:0 y2:-42 class:'second'
+        @hour   = utils.append svg, 'line' y1:0 y2:-32 class:'hour' 
+        @minute = utils.append svg, 'line' y1:0 y2:-42 class:'minute'
+        @second = utils.append svg, 'line' y1:0 y2:-42 class:'second'
                             
 module.exports = Clock

@@ -7,6 +7,7 @@
 ###
 
 sysinfo  = require 'systeminformation'
+{ klog } = require 'kxk'
 
 r_max  = 100
 w_max  = 100
@@ -14,29 +15,24 @@ w_max  = 100
 rx_max = 100
 tx_max = 100
 
-animTimer = null
-
 tick = ->
     
-    clearTimeout animTimer
-    
     sysinfo.getDynamicData (d) =>
-    
-        # if Math.abs(d.networkStats[0].ms - 1000) > 100 # don't trust those values with wrong ms time span
-            # rx_sec = Math.min rx_max, parseInt d.networkStats[0].rx_sec
-            # tx_sec = Math.min tx_max, parseInt d.networkStats[0].tx_sec
-        # else
+            
         rx_sec = parseInt d.networkStats[0].rx_sec
         tx_sec = parseInt d.networkStats[0].tx_sec
         
-        rx_max = Math.max rx_max, rx_sec
-        tx_max = Math.max tx_max, tx_sec
+        rx_max = Math.max rx_max, rx_sec if rx_sec
+        tx_max = Math.max tx_max, tx_sec if tx_sec
         
         nd =
             mem: 
                 used:   d.mem.used
                 total:  d.mem.total
                 active: d.mem.active
+                swap:   
+                        total: d.mem.swaptotal
+                        used:  d.mem.swapused
             net:
                 rx_fac: rx_sec/rx_max
                 tx_fac: tx_sec/tx_max
@@ -45,8 +41,9 @@ tick = ->
                 rx_max: rx_max
                 tx_max: tx_max
             cpu:
-                sys: d.currentLoad.currentload/100 
-                usr: d.currentLoad.currentload_user/100
+                sys:   d.currentLoad.currentLoad/100 
+                usr:   d.currentLoad.currentLoadUser/100
+                cores: d.currentLoad.cpus.map (c) -> c.load/100
          
         if d.disksIO?
             
@@ -63,9 +60,19 @@ tick = ->
                 w_sec: w_sec
                 r_max: r_max
                 w_max: w_max
-        
-        process.send JSON.stringify nd
-        
-        animTimer = setTimeout tick, 10000
 
-tick()
+        if d.battery?.hasBattery
+
+            nd.battery = 
+                loaded:   d.battery.currentCapacity/d.battery.maxCapacity
+                percent:  d.battery.percent
+                time:     d.battery.timeRemaining
+                cycles:   d.battery.cycleCount
+                charging: d.battery.isCharging
+                plugged:  d.battery.acConnected
+                
+        # log 'tick' nd.cpu.sys
+                
+        process.send JSON.stringify nd
+
+animTimer = setInterval tick, 4000

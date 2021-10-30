@@ -38,6 +38,12 @@ window.onload = ->
     
     Konrad = require './konrad'
     new Konrad '/Applications/konrad.app'
+
+    Battery = require './battery'
+    new Battery()
+    
+    Cores = require './cores'
+    new Cores()
     
     Appl = require './appl'
     new Appl '/Applications/clippo.app'
@@ -45,11 +51,13 @@ window.onload = ->
     new Appl '/Applications/kalk.app'
     new Appl '/Applications/iTerm2.app'
     new Appl '/Applications/klog.app'
-    # new Appl '/Applications/knot.app'
+    new Appl '/Applications/knot.app'
     new Appl '/Applications/password-turtle.app'
-    # new Appl '/Users/kodi/s/keks/keks-darwin-x64/keks.app'
-    new Appl '/System/Applications/Mail.app'
     new Appl '/Applications/Firefox.app'
+    new Appl '/System/Applications/Mail.app'
+    new Appl '/System/Applications/Calendar.app'
+    new Appl '/System/Applications/Utilities/Activity Monitor.app'
+    new Appl '/Applications/keks.app'
     
     main.onfocus = -> $('#main').children[4]?.focus()
     

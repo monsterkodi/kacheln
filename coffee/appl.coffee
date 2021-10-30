@@ -140,9 +140,9 @@ class Appl extends Kachel
         if base in ['Calendar']
             time = new Date()
             day = elem class:'calendarDay' text:kstr.lpad time.getDate(), 2, '0'
-            @main.appendChild day
+            @div.appendChild day
             mth = elem class:'calendarMonth' text:['JAN' 'FEB' 'MAR' 'APR' 'MAY' 'JUN' 'JUL' 'AUG' 'SEP' 'OCT' 'NOV' 'DEC'][time.getMonth()]
-            @main.appendChild mth
+            @div.appendChild mth
                 
     setIcon: (iconPath) =>
         

@@ -6,11 +6,11 @@
  0000000      000     000  0000000  0000000 
 ###
 
-{ clamp, deg2rad } = require 'kxk'
-
-class utils
+{ clamp, deg2rad, klog } = require 'kxk'
+        
+class Utils
     
-    @opt = (e,o) ->
+    @opt: (e,o) ->
         
         if o?
             for k in Object.keys o
@@ -24,7 +24,7 @@ class utils
         e
         
     @svg: (width:100, height:100, clss:) ->
-        
+        klog 'svg' width, height
         svg = document.createElementNS 'http://www.w3.org/2000/svg' 'svg'
         svg.setAttribute 'viewBox' "-#{width/2} -#{width/2} #{width} #{height}"
         svg.setAttribute 'class' clss if clss
@@ -34,11 +34,18 @@ class utils
         
         svg ?= @svg width:2*radius, height:2*radius
         g = @append svg, 'g'
-        c = @append g, 'circle', cx:cx, cy:cy, r:radius, class:clss
-        svg
+        c = @append g, 'circle' cx:cx, cy:cy, r:radius, class:clss
+        svg # why svg and not c?
+
+    @rect: (x:0, y:0, w:1, h:1, r:0, clss:, svg:) ->
+
+        svg ?= @svg width:w, height:h
+        g = @append svg, 'g'
+        r = @append g, 'rect' x:x, y:y, width:w, height:h, rx:r, class:clss
+        r
         
     @pie: (radius:10, cx:0, cy:0, angle:0, start:0, clss:, svg:) ->
-
+        
         start = clamp 0 360 start%360
         angle = clamp 0 360 (start+angle)%360
         
@@ -57,4 +64,4 @@ class utils
             
         pie
 
-module.exports = utils
+module.exports = Utils

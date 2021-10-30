@@ -58,60 +58,62 @@ class Sysdish extends Kachel
     # 000000000  000 0 000  000  000000000  000   000  000  0000000   000000000  
     # 000   000  000  0000  000  000 0 000  000   000  000       000  000   000  
     # 000   000  000   000  000  000   000  0000000    000  0000000   000   000  
+
+    pie180: (pie, radius, angle, start=0) ->
+        
+        angle = clamp 0, 180, angle
+        sx =  radius * Math.sin deg2rad start+angle
+        sy = -radius * Math.cos deg2rad start+angle
+        ex =  radius * Math.sin deg2rad start
+        ey = -radius * Math.cos deg2rad start
+        pie.setAttribute 'd' "M 0 0 L #{sx} #{sy} A #{radius} #{radius} #{start} 0 0 #{ex} #{ey} z"
+    
+    pie360: (pie, radius, angle) ->
+        
+        angle = clamp 0, 359, angle
+        sx =  radius * Math.sin deg2rad angle
+        sy = -radius * Math.cos deg2rad angle
+        ex =  0
+        ey = -radius
+        f = angle <= 180 and '0 0' or '1 0'
+        pie.setAttribute 'd' "M 0 0 L #{sx} #{sy} A #{radius} #{radius} 0 #{f} #{ex} #{ey} z"
     
     animDish: =>
         
         clearTimeout @animTimer
         
         return if not @data
-        
+        steps = 20 
         @animCount += 1
-        if @animCount <= 30
-
-            pie180 = (pie, radius, angle, start=0) ->
-                angle = clamp 0, 180, angle
-                sx =  radius * Math.sin deg2rad start+angle
-                sy = -radius * Math.cos deg2rad start+angle
-                ex =  radius * Math.sin deg2rad start
-                ey = -radius * Math.cos deg2rad start
-                pie.setAttribute 'd' "M 0 0 L #{sx} #{sy} A #{radius} #{radius} #{start} 0 0 #{ex} #{ey} z"
-            
-            pie360 = (pie, radius, angle) ->
-                angle = clamp 0, 359, angle
-                sx =  radius * Math.sin deg2rad angle
-                sy = -radius * Math.cos deg2rad angle
-                ex =  0
-                ey = -radius
-                f = angle <= 180 and '0 0' or '1 0'
-                pie.setAttribute 'd' "M 0 0 L #{sx} #{sy} A #{radius} #{radius} 0 #{f} #{ex} #{ey} z"
+        if @animCount <= steps
             
             if @data.dsk?
                  
-                @dskrNow += (@dskrNew - @dskrOld) / 30
-                @dskwNow += (@dskwNew - @dskwOld) / 30
+                @dskrNow += (@dskrNew - @dskrOld) / steps 
+                @dskwNow += (@dskwNew - @dskwOld) / steps
                  
-                pie180 @dskrPie, 45, @dskrNow
-                pie180 @dskwPie, 45, @dskwNow, 180
+                @pie180 @dskrPie, 45, @dskrNow
+                @pie180 @dskwPie, 45, @dskwNow, 180
                              
-            @netrNow += (@netrNew - @netrOld) / 30
-            @nettNow += (@nettNew - @nettOld) / 30
+            @netrNow += (@netrNew - @netrOld) / steps
+            @nettNow += (@nettNew - @nettOld) / steps 
              
-            pie180 @netrPie, 45, @netrNow
-            pie180 @nettPie, 45, @nettNow, 180
+            @pie180 @netrPie, 43, @netrNow
+            @pie180 @nettPie, 43, @nettNow, 180
             
-            @sysNow += (@sysNew - @sysOld) / 30
-            @usrNow += (@usrNew - @usrOld) / 30
+            @sysNow += (@sysNew - @sysOld) / steps 
+            @usrNow += (@usrNew - @usrOld) / steps 
             
-            pie360 @usrPie, 40, @usrNow
-            pie360 @sysPie, 40, @sysNow
+            @pie360 @usrPie, 40, @usrNow
+            @pie360 @sysPie, 40, @sysNow
             
-            @memuNow += (@memuNew - @memuOld) / 30
-            @memaNow += (@memaNew - @memaOld) / 30
+            @memuNow += (@memuNew - @memuOld) / steps
+            @memaNow += (@memaNew - @memaOld) / steps 
             
-            pie360 @memuPie, 18, @memuNow
-            pie360 @memaPie, 18, @memaNow
+            @pie360 @memuPie, 18, @memuNow
+            @pie360 @memaPie, 18, @memaNow
                             
-        @animTimer = setTimeout @animDish, parseInt 10000 / 30
+        @animTimer = setTimeout @animDish, parseInt 4000 / steps
     
     # 000  000   000  000  000000000  0000000    000   0000000  000   000  
     # 000  0000  000  000     000     000   000  000  000       000   000  
@@ -120,7 +122,7 @@ class Sysdish extends Kachel
     # 000  000   000  000     000     0000000    000  0000000   000   000  
     
     initDish: ->
-        
+ 
         @div.innerHTML = ''
         svg = utils.svg clss:'dish'
         @div.appendChild svg

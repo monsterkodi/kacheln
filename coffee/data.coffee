@@ -8,7 +8,6 @@
 
 { $, _, childp, empty, klog, kpos, last, os, post, slash, udp, win } = require 'kxk'
 
-sysinfo  = require 'systeminformation'
 electron = require 'electron'
 wxw      = require 'wxw'
 
@@ -145,31 +144,7 @@ class Mouse
             post.emit 'mouse' event
         else
             @sendTimer = setTimeout (=> @onEvent @lastEvent), @interval
-                
-# 0000000     0000000   000   000  000   000  0000000     0000000  
-# 000   000  000   000  000   000  0000  000  000   000  000       
-# 0000000    000   000  000   000  000 0 000  000   000  0000000   
-# 000   000  000   000  000   000  000  0000  000   000       000  
-# 0000000     0000000    0000000   000   000  0000000    0000000   
-
-class Bounds
-    
-    @: (@name='bounds' @receivers=[]) ->
-        
-        post.on 'bounds' @onBounds
-        
-        @lastInfos = null
-        @onBounds()
-       
-    onBounds: (msg, arg) =>
-        
-        bounds = require './bounds'
-        infos = bounds.infos
-        if not _.isEqual infos, @lastInfos
-            @lastInfos = infos
-            for receiver in @receivers
-                post.toWin receiver, 'data', infos
-            
+                            
 #  0000000   00000000   00000000    0000000  
 # 000   000  000   000  000   000  000       
 # 000000000  00000000   00000000   0000000   

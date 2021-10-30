@@ -37,8 +37,8 @@ class Kachel
         br = @div.getBoundingClientRect()
         if br.width < 100
             switch direction
-                when 'down' then return @div.nextSibling.nextSibling
-                when 'up'   then return @div.previousSibling.previousSibling
+                when 'down' then return @div.nextSibling?.nextSibling
+                when 'up'   then return @div.previousSibling?.previousSibling
 
         switch direction
             when 'left'  'up'    then @div.previousSibling
