@@ -6,7 +6,7 @@
  0000000      000     000  0000000  0000000 
 ###
 
-{ clamp, deg2rad, klog } = require 'kxk'
+{ clamp, deg2rad } = require 'kxk'
         
 class Utils
     
@@ -24,7 +24,7 @@ class Utils
         e
         
     @svg: (width:100, height:100, clss:) ->
-        klog 'svg' width, height
+
         svg = document.createElementNS 'http://www.w3.org/2000/svg' 'svg'
         svg.setAttribute 'viewBox' "-#{width/2} -#{width/2} #{width} #{height}"
         svg.setAttribute 'class' clss if clss

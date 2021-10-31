@@ -36,8 +36,6 @@ body {
 }
 .kachel {
   -webkit-app-region: no-drag;
-  min-width: 64px;
-  border-bottom: 1px solid;
   position: relative;
   pointer-events: all;
 }
@@ -77,23 +75,30 @@ body {
 .appldot .applcircle {
   stroke-width: 0;
 }
-.calendarMonth {
+.calendarIcon {
   position: absolute;
-  top: 21.5%;
-  left: 36%;
-  font-size: 14px;
+  border-radius: 20%;
+  width: 63%;
+  height: 63%;
+  margin: auto;
+  overflow: hidden;
+  cursor: pointer;
+}
+.calendarMonth {
+  font-size: 7vw;
   font-family: calendarFont;
   line-height: 1;
+  text-align: center;
   color: #fff;
   background-color: #e8564e;
+  padding: 1vw;
 }
 .calendarDay {
-  position: absolute;
-  top: 38%;
-  left: 27%;
-  font-size: 37px;
+  font-size: 21vw;
+  text-align: center;
   font-family: calendarFont;
   line-height: 1;
   color: #000;
   background-color: #f8f8f8;
+  padding-bottom: 4vw;
 }

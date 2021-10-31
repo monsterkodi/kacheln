@@ -1,5 +1,5 @@
 name            kacheln
-version         0.1.1
+version         0.2.0
 description     dock
 author          monsterkodi
 license         Unlicense
@@ -10,7 +10,7 @@ build
                 mac
                   icon  img/app.icns
 dependencies
-                kxk             ^0.415.0
+                kxk             ^0.417.0
                 systeminformation  ^5.9.9
                 wxw             ^1.89.0
 devDependencies

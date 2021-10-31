@@ -54,12 +54,13 @@ window.onload = ->
     new Appl '/Applications/knot.app'
     new Appl '/Applications/password-turtle.app'
     new Appl '/Applications/Firefox.app'
+    new Appl '/Applications/keks.app'
+    new Appl '/Applications/koin.app'
     new Appl '/System/Applications/Mail.app'
     new Appl '/System/Applications/Calendar.app'
     new Appl '/System/Applications/Utilities/Activity Monitor.app'
-    new Appl '/Applications/keks.app'
     
-    main.onfocus = -> $('#main').children[4]?.focus()
+    # main.onfocus = -> $('#main').focus()
     
     data.start()
     

@@ -19,6 +19,8 @@ class Cores extends Kachel
         
         post.on 'sysinfo' @onData
         
+        @colors = ['#44f' '#88f' '#0f4' '#f00' '#ff0' '#fff']
+        
         @init()
     
     onData: (@data) => @draw()
@@ -54,7 +56,7 @@ class Cores extends Kachel
         return if not @cores
 
         for i in 0...8
-            fill = "rgb(#{@data.cpu.cores[i]*255}, #{@data.cpu.cores[i]*155}, 0)"
+            fill = @colors[parseInt @data.cpu.cores[i]*5]
             @cores[i].setAttribute 'y' -30+60-60*@data.cpu.cores[i]
             @cores[i].setAttribute 'height' 60*@data.cpu.cores[i]
             @cores[i].setAttribute 'fill' fill

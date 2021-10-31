@@ -138,11 +138,11 @@ class Appl extends Kachel
         
         base = slash.base @kachelId
         if base in ['Calendar']
+            @div.children[0].style.opacity = 0
             time = new Date()
             day = elem class:'calendarDay' text:kstr.lpad time.getDate(), 2, '0'
-            @div.appendChild day
             mth = elem class:'calendarMonth' text:['JAN' 'FEB' 'MAR' 'APR' 'MAY' 'JUN' 'JUL' 'AUG' 'SEP' 'OCT' 'NOV' 'DEC'][time.getMonth()]
-            @div.appendChild mth
+            @div.appendChild elem class:'calendarIcon' children: [mth, day]
                 
     setIcon: (iconPath) =>
         
