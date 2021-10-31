@@ -28,7 +28,7 @@ class Konrad extends Kachel
         
     onLeftClick: (event) => @openApp @kachelId
     
-    onContextMenu: (event) => 
+    onContextMenu: (event) =>
         
         if os.platform() == 'win32'
             wxw = require 'wxw'
@@ -48,7 +48,7 @@ class Konrad extends Kachel
         
     onMsg: (msg) =>
         
-        klog 'onMsg' msg
+        # klog 'onMsg' msg
         prefix = msg.split(':')[0]
         
         switch prefix

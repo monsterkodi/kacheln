@@ -19,7 +19,7 @@ class Cores extends Kachel
         
         post.on 'sysinfo' @onData
         
-        @colors = ['#44f' '#88f' '#0f4' '#f00' '#ff0' '#fff']
+        @colors = ['#44f' '#88f' '#0a0' '#f80' '#fa0' '#ff0']
         
         @init()
     

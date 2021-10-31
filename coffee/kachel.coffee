@@ -10,7 +10,7 @@
 
 class Kachel
 
-    @: (@kachelId='kachel') -> 
+    @: (@kachelId='kachel') ->
     
         @main =$ '#main'
         @div  = elem class:"kachel #{@constructor.name}" 
