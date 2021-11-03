@@ -37,12 +37,15 @@ class Cores extends Kachel
         svg = utils.svg width:100 height:100
         @div.appendChild svg
 
-        body   = utils.rect x:-40 y:-40 w:80 h:80 r:8 clss:'core_bg' svg:svg
+        body = utils.rect x:-40 y:-40 w:80 h:80 r:8 clss:'core_bg' svg:svg
+
+        for i in 0...8
+            r = utils.rect x:-36+i*9 y:-36 w:8 h:72 r:3 svg:svg, clss:'core_load'
         
         @cores = []
         for i in 0...8
-            @cores.push utils.rect x:-31.5+i*8 y:-30 w:7 h:60 r:2 clss:'core_load' svg:svg
-            @cores[i].setAttribute 'fill' '#222222'
+            @cores.push utils.rect x:-36+i*9 y:30 w:8 h:6 r:3 svg:svg
+            @cores[i].setAttribute 'fill' @colors[0]
             
      # 0000000    00000000    0000000   000   000
      # 000   000  000   000  000   000  000 0 000
@@ -57,8 +60,8 @@ class Cores extends Kachel
 
         for i in 0...8
             fill = @colors[parseInt @data.cpu.cores[i]*5]
-            @cores[i].setAttribute 'y' -30+60-60*@data.cpu.cores[i]
-            @cores[i].setAttribute 'height' 60*@data.cpu.cores[i]
+            @cores[i].setAttribute 'y' 36-72*@data.cpu.cores[i]
+            @cores[i].setAttribute 'height' 72*@data.cpu.cores[i]
             @cores[i].setAttribute 'fill' fill
                 
 module.exports = Cores

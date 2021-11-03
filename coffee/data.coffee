@@ -6,7 +6,7 @@
 0000000    000   000     000     000   000
 ###
 
-{ $, _, childp, empty, klog, kpos, last, os, post, slash, udp, win } = require 'kxk'
+{ $, _, childp, empty, filter, kpos, last, os, post, slash, udp, win } = require 'kxk'
 
 electron = require 'electron'
 wxw      = require 'wxw'
@@ -18,15 +18,15 @@ class Data
         @detach()
         
         #  @hookProc  = wxw 'hook' 'proc'
-        @hookInfo  = wxw 'hook' 'info'
+        #  @hookInfo  = wxw 'hook' 'info'
         #  @hookInput = wxw 'hook' 'input'
             
         @providers = 
             # mouse:      new Mouse
             # apps:       new Apps
-            wins:       new Wins
-            clock:      new Clock 
             sysinfo:    new Sysinfo
+            clock:      new Clock 
+            wins:       new Wins
         
     start: ->
         
@@ -39,8 +39,8 @@ class Data
         
         if os.platform() == 'win32'
             wxw 'kill' 'wc.exe'
-        else
-            wxw 'kill' 'mc'
+        # else
+            # wxw 'kill' 'mc'
             
     # 000   000  0000000    00000000   
     # 000   000  000   000  000   000  
@@ -95,17 +95,16 @@ class Clock
 
 class Sysinfo
         
-    @: (@name='sysinfo' @tick='slow') ->
+    @: (@name='sysinfo') ->
         
         fork = childp.fork "#{__dirname}/memnet"
         fork.on 'message' @onMessage
         
     onMessage: (m) => 
         
-        @data = JSON.parse m
-        post.emit 'sysinfo' @data
+        post.emit 'sysinfo' JSON.parse m
         
-    onTick: (data) => # if @data then post.emit 'sysinfo' @data
+    # onTick: (data) => # if @data then post.emit 'sysinfo' @data
         
 # 00     00   0000000   000   000   0000000  00000000  
 # 000   000  000   000  000   000  000       000       
@@ -172,7 +171,7 @@ class Apps
                  
         apps.sort()
         if not _.isEqual apps, @lastApps
-            klog 'apps' apps
+            # klog 'apps' apps
             @lastApps = apps
         
 # 000   000  000  000   000   0000000  
@@ -183,15 +182,46 @@ class Apps
 
 class Wins
     
-    @: (@name='wins') ->
+    @: (@name='wins' @tick='slow') ->
         
         @lastWins = null
+        
+    onTick: ->
+        
+        if not slash.win()
+            
+            { getProcessList } = require 'macos-native-processlist'
+            
+            getProcessList().then (procs) => 
+                
+                procs = filter procs, (p) -> 
+                    return false if 0 > p.path.indexOf('.app/Contents/MacOS')
+                    return false if 0 < p.name.indexOf ' Helper'
+                    return false if p.name in ['plugin-container']
+                    return false if p.path.startsWith '/System/Library/'
+                    true
+                    
+                # klog 'procs' ( p.path for p in procs ) 
+                # klog 'kacheln' @kacheln().length
+                    
+                for k in @kacheln()
+                    k.activated = false
+                    k.status = ''
+                    for p in procs
+                        if p.path.split('/Contents/MacOS/')[0] == k.kachelId
+                            k.activated = true
+                            k.status = 'normal'
+                            break
+                    # klog 'activated' k.activated, k.kachelId
+                    k.updateDot()                    
 
     kacheln: ->
         
         kl = []
-        for i in 0...$('#main').children.length
-            kl.push $('#main').children[i].kachel
+        main =$ '#main'
+        for i in 0...main.children.length
+            if main.children[i].kachel.updateDot
+                kl.push main.children[i].kachel
         kl
         
     onEvent: (event) =>

@@ -6,7 +6,7 @@
 0000000    000   000     000        000     00000000  000   000     000     
 ###
 
-{ post } = require 'kxk'
+{ elem, post } = require 'kxk'
 
 utils   = require './utils'
 Kachel  = require './kachel'
@@ -34,6 +34,7 @@ class Battery extends Kachel
         @div.innerHTML = ''
         svg = utils.svg width:100 height:100
         @div.appendChild svg
+        @cycles = elem class:'battery_cycles' parent:@div, text:'?'
 
         body =     utils.rect x:-30 y:-40 w:60 h:80 r:8 clss:'battery_bg' svg:svg
         bobl =     utils.rect x:-15 y:-45 w:30 h:10 r:8 clss:'battery_bg' svg:svg
@@ -67,5 +68,7 @@ class Battery extends Kachel
         @battery.setAttribute 'y' -35+70-70*@data.battery.loaded
         @battery.setAttribute 'height' 70*@data.battery.loaded
         @battery.setAttribute 'fill' fill
+        
+        @cycles.innerHTML = @data.battery.cycles
                 
 module.exports = Battery

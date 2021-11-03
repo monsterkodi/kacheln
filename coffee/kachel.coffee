@@ -16,13 +16,13 @@ class Kachel
         @div  = elem class:"kachel #{@constructor.name}" 
         @div.setAttribute 'tabindex' '0'
         @div.onkeydown    = @onKeyDown
+        @div.onmousedown  = @onMouseDown
         @div.onmouseenter = @onHover
         @div.onmouseleave = @onLeave
         @div.onfocus      = @onFocus
         @div.onblur       = @onBlur
         @main.appendChild @div
         @div.kachel = @
-        @div.addEventListener 'mousedown' @onLeftClick
                     
     onKeyDown: (event) => 
     
@@ -93,7 +93,14 @@ class Kachel
     onLeave: (event) => @div.classList.remove 'kachelHover'
     onFocus: (event) => @div.classList.add 'kachelFocus'
     onBlur:  (event) => @div.classList.remove 'kachelFocus'
+       
+    onMouseDown: (event) =>
         
+        switch event.button
+            when 0 then @onLeftClick event
+            when 1 then @onMiddleClick event
+            when 2 then @onRightClick event
+    
     onLeftClick:   -> # to be overridden in subclasses
     onMiddleClick: -> # to be overridden in subclasses
     onRightClick:  -> # to be overridden in subclasses

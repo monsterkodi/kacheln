@@ -57,12 +57,14 @@ body
     bottom              0
 
 .kachel
-    -webkit-app-region  no-drag
     position            relative
     pointer-events      all
     &.Appl
         display         inline-grid
         max-width       50%
+    &.Volume
+        display         inline-grid
+        width           32%
     &.Battery
         display         inline-grid
         width           32%
@@ -137,4 +139,18 @@ body
     background-color    #F8F8F8
     padding-bottom      4vw
         
+    // 000   000   0000000   000      000   000  00     00  00000000    
+    // 000   000  000   000  000      000   000  000   000  000         
+    //  000 000   000   000  000      000   000  000000000  0000000     
+    //    000     000   000  000      000   000  000 0 000  000         
+    //     0       0000000   0000000   0000000   000   000  00000000    
+    
+.face
+    stroke-width        2
+   
+.volmrk
+.minmrk
+    stroke-linecap      round
+    stroke-width        2 
+    
     

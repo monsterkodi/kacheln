@@ -6,12 +6,11 @@
 000   000  000        000        0000000  
 ###
 
-{ $, app, elem, empty, klog, kstr, os, post, slash, valid } = require 'kxk'
+{ $, app, childp, elem, empty, klog, kstr, os, post, slash, valid } = require 'kxk'
 
 Kachel  = require './kachel'
 appIcon = require './icon'
 utils   = require './utils'
-wxw     = require 'wxw'
 
 class Appl extends Kachel
         
@@ -95,8 +94,16 @@ class Appl extends Kachel
     #  0000000  0000000  000   0000000  000   000  
                 
     onLeftClick: => @openApp @kachelId
-    onRightClick: => wxw 'minimize' slash.file @kachelId
-    onMiddleClick: => wxw 'terminate' @kachelId
+    onRightClick: => 
+        if slash.win()
+            wxw = require 'wxw'
+            wxw 'minimize' slash.file @kachelId
+        else            
+            childp.spawn 'osascript' ['-e' "tell application \"Finder\" to set visible of process \"#{slash.base @kachelId}\" to false"]
+                        
+    onMiddleClick: => 
+        wxw = require 'wxw'
+        wxw 'terminate' @kachelId
                     
     # 000  000   000  000  000000000  
     # 000  0000  000  000     000     

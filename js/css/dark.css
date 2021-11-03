@@ -48,12 +48,6 @@
 .sysdish_mem_active {
   fill: #88f;
 }
-.battery_bg {
-  fill: #000;
-}
-.core_bg {
-  fill: #1a1a1a;
-}
 .face {
   fill: #1e1e1e;
 }
@@ -85,4 +79,40 @@
 }
 .appldot.top {
   fill: #f80;
+}
+.battery_bg {
+  fill: #000;
+}
+.battery_cycles {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  padding-top: 35%;
+  padding-bottom: 35%;
+  color: rgba(0,0,0,0);
+}
+.battery_cycles:hover {
+  color: #888;
+}
+.knob {
+  fill: #1c1c1c;
+}
+.scale,
+.volmrk {
+  stroke: #000;
+  stroke-width: 4;
+}
+.voldot {
+  fill: #888;
+}
+.voldot.mute {
+  fill: #141414;
+}
+.core_bg {
+  fill: #181818;
+  stroke: #000;
+  stroke-width: 4;
+}
+.core_load {
+  fill: #1c1c1c;
 }

@@ -35,13 +35,16 @@ body {
   bottom: 0;
 }
 .kachel {
-  -webkit-app-region: no-drag;
   position: relative;
   pointer-events: all;
 }
 .kachel.Appl {
   display: inline-grid;
   max-width: 50%;
+}
+.kachel.Volume {
+  display: inline-grid;
+  width: 32%;
 }
 .kachel.Battery {
   display: inline-grid;
@@ -101,4 +104,12 @@ body {
   color: #000;
   background-color: #f8f8f8;
   padding-bottom: 4vw;
+}
+.face {
+  stroke-width: 2;
+}
+.volmrk,
+.minmrk {
+  stroke-linecap: round;
+  stroke-width: 2;
 }

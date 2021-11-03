@@ -6,7 +6,7 @@
 00     00  000  000   000  0000000     0000000   00     00  
 ###
 
-{ $, drag, post, win } = require 'kxk'
+{ $, drag, post, valid, win } = require 'kxk'
 
 w = new win
     dir:    __dirname
@@ -27,25 +27,22 @@ window.onload = ->
 
     post.setMaxListeners 30
     
+    Appl = require './appl'
     Data = require './data'
-    data = new Data
-    
     Clock = require './clock'
-    clock = new Clock
-    
     Dish = require './sysdish'
-    dish = new Dish
-    
     Konrad = require './konrad'
-    new Konrad '/Applications/konrad.app'
-
     Battery = require './battery'
-    new Battery()
-    
     Cores = require './cores'
+    Volume = require './volume'
+    
+    new Clock
+    new Dish
+    new Konrad '/Applications/konrad.app'
+    new Battery()
+    new Volume()
     new Cores()
     
-    Appl = require './appl'
     new Appl '/Applications/clippo.app'
     new Appl '/Applications/ko.app'
     new Appl '/Applications/kalk.app'
@@ -59,9 +56,10 @@ window.onload = ->
     new Appl '/System/Applications/Mail.app'
     new Appl '/System/Applications/Calendar.app'
     new Appl '/System/Applications/Utilities/Activity Monitor.app'
-    
+        
     # main.onfocus = -> $('#main').focus()
     
+    data = new Data
     data.start()
     
     # 0000000    00000000    0000000    0000000   
@@ -74,7 +72,10 @@ window.onload = ->
         target:     document.body
         handle:     $('#main')
         stopEvent:  false
-        onStart:    -> dragBounds = window.win.getBounds()
+        onStart:    (drag, event) -> 
+            if valid event.target.classList
+                return 'skip'
+            dragBounds = window.win.getBounds()
         onMove:     (drag) ->
             if dragBounds
                 window.win.setBounds

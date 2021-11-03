@@ -1,0 +1,113 @@
+###
+000   000   0000000   000      000   000  00     00  00000000  
+000   000  000   000  000      000   000  000   000  000       
+ 000 000   000   000  000      000   000  000000000  0000000   
+   000     000   000  000      000   000  000 0 000  000       
+    0       0000000   0000000   0000000   000   000  00000000  
+###
+
+{ childp, clamp, drag, kpos } = require 'kxk'
+
+wxw     = require 'wxw'
+utils   = require './utils'
+Kachel  = require './kachel'
+
+class Volume extends Kachel
+        
+    @: (@kachelId='volume') ->
+        
+        super @kachelId
+        
+        @mute = false
+        @div.addEventListener 'mousewheel' @onWheel
+   
+        @volume = @getVolume()
+        @folume = @volume
+        
+        setInterval @checkVolume, 1000
+        
+        @onLoad()
+        
+        @drag = new drag
+            target:     @div
+            handle:     @div
+            stopEvent:  false
+            onStart:    (drag, event) => if event.button == 0 then @setVolumeAtEvent event
+            onMove:     (drag, event) => if event.button == 0 then @setVolumeAtEvent event
+        
+    onLeftClick: (event) =>
+                                
+    setVolumeAtEvent: (event) =>
+        
+        br  = @div.getBoundingClientRect()
+        ctr = kpos(br.left, br.top).plus kpos(br.width, br.height).times 0.5
+        vec = ctr.to kpos event
+        rot = vec.normal().rotation kpos(0,-1)
+        @setVolume 50 + rot / 3
+        
+    onWheel: (event) => 
+        
+        return if event.deltaY == 0
+        @folume -= event.deltaY/100
+        @folume = clamp 0 100 @folume
+        @setVolume @folume
+    
+    getVolume: -> parseInt wxw 'volume'
+        
+    setVolume: (v) ->
+        
+        v = parseInt clamp 0 100 v
+        
+        if v != @volume
+            @volume = v
+            @mute = false
+            @updateVolume()
+            childp.exec "osascript -e \"set volume output volume #{@volume}\""
+        
+    checkVolume: =>
+        
+        volume = @getVolume()
+        if volume != @volume
+            @setVolume volume
+        @folume = @volume
+        
+    onRightClick: (event) => 
+        
+        if @mute
+            @mute = false
+            childp.exec 'osascript -e "set volume without output muted"'
+        else
+            @mute = true
+            childp.exec 'osascript -e "set volume with output muted"'
+            
+        @updateVolume()
+                
+    # 000       0000000    0000000   0000000    
+    # 000      000   000  000   000  000   000  
+    # 000      000   000  000000000  000   000  
+    # 000      000   000  000   000  000   000  
+    # 0000000   0000000   000   000  0000000    
+    
+    onLoad: ->
+        
+        svg = utils.svg clss:'volume'
+        @div.appendChild svg
+        
+        utils.circle radius:40 clss:'scala' svg:svg
+        face = utils.circle radius:36 clss:'knob' svg:svg
+        
+        for m in [1..11]
+            
+            utils.append face, 'line' class:'volmrk' y1:40 y2:47 transform:"rotate(#{30*m*5})" 
+    
+        @voldot = utils.append face, 'circle' r:5 cx:0 cy:-25 class:'voldot'
+        
+        @updateVolume()
+        
+    updateVolume: ->
+        
+        angle = 150*(@volume-50)/50
+        @voldot.setAttribute 'transform' "rotate(#{angle})"
+        @voldot.classList.toggle 'mute' @mute
+                            
+module.exports = Volume

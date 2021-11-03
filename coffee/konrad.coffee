@@ -6,7 +6,7 @@
 000   000   0000000   000   000  000   000  000   000  0000000    
 ###
 
-{ klog, os, post, slash, udp } = require 'kxk'
+{ childp, klog, os, post, slash, udp } = require 'kxk'
 
 Kachel = require './kachel'
 
@@ -27,6 +27,11 @@ class Konrad extends Kachel
             when 'terminated' then @sleepIcon()
         
     onLeftClick: (event) => @openApp @kachelId
+    onRightClick: => 
+        if slash.win()
+            wxw 'minimize' slash.file @kachelId
+        else            
+            childp.spawn 'osascript' ['-e' "tell application \"Finder\" to set visible of process \"#{slash.base @kachelId}\" to false"]
     
     onContextMenu: (event) =>
         
