@@ -10,7 +10,7 @@ build
                 mac
                   icon  img/app.icns
 dependencies
-                kxk             ^0.418.0
+                kxk             ^0.419.0
                 macos-native-processlist  ^2.0.0
                 systeminformation  ^5.9.9
                 wxw             ^1.89.0
