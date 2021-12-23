@@ -18,7 +18,6 @@ window.onload = function ()
 {
     var Appl, Battery, Clock, Cores, data, Data, Dish, Konrad, Volume
 
-    console.log('onload')
     post.setMaxListeners(30)
     Appl = require('./appl')
     Data = require('./data')

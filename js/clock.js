@@ -37,7 +37,6 @@ Clock = (function ()
     {
         var face, svg
 
-        console.log('onLoad CLocK')
         svg = utils.svg(100,100,'clock')
         this.div.appendChild(svg)
         face = utils.circle(45,0,0,'face',svg)
