@@ -6,22 +6,17 @@
 000   000  000        000        0000000  
 ###
 
-log '1'
 kxk = require 'kxk'
-log '2'
 { $, app, childp, elem, klog, kstr, os, post, slash } = kxk
 
-log '3'
 Kachel  = require './kachel'
 appIcon = require './icon'
 utils   = require './utils'
-log '4'
 
 function Appl extends Kachel
         
     @: (@kachelId='appl') ->
 
-        log '5'
         post.on 'app' @onApp
         post.on 'win' @onWin
         
@@ -150,7 +145,7 @@ function Appl extends Kachel
         @setIcon pngPath
         
         base = slash.base @kachelId
-        if base in ['Calendar']
+        if base == 'Calendar'
             @div.children[0].style.opacity = 0
             time = new Date()
             day = elem class:'calendarDay' text:kstr.lpad time.getDate(), 2, '0'

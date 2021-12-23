@@ -1,4 +1,4 @@
-// monsterkodi/kode 0.199.0
+// monsterkodi/kode 0.200.0
 
 var _k_ = {empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, valid: undefined}
 
@@ -18,6 +18,7 @@ window.onload = function ()
 {
     var Appl, Battery, Clock, Cores, data, Data, Dish, Konrad, Volume
 
+    console.log('onload')
     post.setMaxListeners(30)
     Appl = require('./appl')
     Data = require('./data')

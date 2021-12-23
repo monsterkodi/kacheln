@@ -1,4 +1,4 @@
-// monsterkodi/kode 0.199.0
+// monsterkodi/kode 0.200.0
 
 var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}}
 
@@ -12,7 +12,7 @@ Kachel = require('./kachel')
 
 Cores = (function ()
 {
-    _k_.extend(Cores, Kachel);
+    _k_.extend(Cores, Kachel)
     function Cores (kachelId = 'cores')
     {
         this.kachelId = kachelId
@@ -22,7 +22,6 @@ Cores = (function ()
         post.on('sysinfo',this.onData)
         this.colors = ['#44f','#88f','#0a0','#f80','#fa0','#ff0']
         this.init()
-        return Cores.__super__.constructor.apply(this, arguments)
     }
 
     Cores.prototype["onData"] = function (data)

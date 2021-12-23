@@ -1,8 +1,8 @@
-// monsterkodi/kode 0.199.0
+// monsterkodi/kode 0.200.0
 
 var _k_
 
-var action, activeApps, app, args, electron, KachelApp, klog, mainMenu, onApps, os, pkg, post, slash, wxw, _
+var action, activeApps, app, args, electron, KachelApp, klog, mainMenu, onApps, os, pkg, post, prefs, slash, wxw, _
 
 _ = require('kxk')._
 app = require('kxk').app
@@ -10,6 +10,7 @@ args = require('kxk').args
 klog = require('kxk').klog
 os = require('kxk').os
 post = require('kxk').post
+prefs = require('kxk').prefs
 slash = require('kxk').slash
 
 electron = require('electron')
@@ -41,7 +42,6 @@ KachelApp = new app({pkg:pkg,dir:__dirname,shortcut:slash.win() && 'Ctrl+F2' || 
 {
     var k, keys, mainWin, v
 
-    console.log('onWinReady')
     if (args.devtools)
     {
         w.webContents.openDevTools({mode:'detach'})
@@ -55,6 +55,9 @@ KachelApp = new app({pkg:pkg,dir:__dirname,shortcut:slash.win() && 'Ctrl+F2' || 
         {
             return action('taskbar')
         })
+        keys = prefs.get('keys',keys)
+        prefs.set('keys',keys)
+        prefs.save()
         for (k in keys)
         {
             v = keys[k]
@@ -69,7 +72,6 @@ KachelApp = new app({pkg:pkg,dir:__dirname,shortcut:slash.win() && 'Ctrl+F2' || 
     }
     return w.show()
 }).bind(this)})
-console.log('KachelApp',(app != null))
 
 action = function (act)
 {

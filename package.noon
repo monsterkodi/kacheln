@@ -1,22 +1,22 @@
-name            kacheln
-version         0.5.0
-description     dock
-author          monsterkodi
-license         Unlicense
-main            js/main.js
-repository      github:monsterkodi/kacheln
+name                kacheln
+version             0.6.0
+description         dock
+author              monsterkodi
+license             Unlicense
+main                js/main.js
+repository          github:monsterkodi/kacheln
 scripts
-                build  kode -Ho js kode/*.kode
+                    build  kode -Ho js kode/*.kode
 build
-                asar  false
-                mac
-                  icon  img/app.icns
+                    asar    false
+                    mac
+                        icon  img/app.icns
 dependencies
-                kxk             monsterkodi/kxk
-                wxw             monsterkodi/wxw
-                macos-native-processlist  ^2.0.0
-                systeminformation  ^5.9.17
+                    kxk                         monsterkodi/kxk
+                    wxw                         monsterkodi/wxw
+                    macos-native-processlist    ^2.0.0
+                    systeminformation           ^5.9.17
 devDependencies
-                kode            monsterkodi/kode
-                electron        ^16.0.5
-                electron-builder  ^22.14.5
+                    kode                monsterkodi/kode
+                    electron            ^16.0.5
+                    electron-builder    ^22.14.5

@@ -1,4 +1,4 @@
-// monsterkodi/kode 0.199.0
+// monsterkodi/kode 0.200.0
 
 var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}}
 
@@ -13,7 +13,7 @@ Kachel = require('./kachel')
 
 Sysdish = (function ()
 {
-    _k_.extend(Sysdish, Kachel);
+    _k_.extend(Sysdish, Kachel)
     function Sysdish (kachelId = 'sysdish')
     {
         this.kachelId = kachelId
@@ -26,7 +26,6 @@ Sysdish = (function ()
         this.tops = {net:'0%',dsk:'33%',cpu:'66%'}
         post.on('sysinfo',this.onData)
         this.initDish()
-        return Sysdish.__super__.constructor.apply(this, arguments)
     }
 
     Sysdish.prototype["onData"] = function (data)

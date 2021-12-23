@@ -1,12 +1,10 @@
-// monsterkodi/kode 0.199.0
+// monsterkodi/kode 0.200.0
 
 var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}, list: function (l) {return (l != null ? typeof l.length === 'number' ? l : [] : [])}, empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, valid: undefined, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}}
 
 var $, app, appIcon, Appl, childp, elem, Kachel, klog, kstr, kxk, os, post, slash, utils
 
-console.log('1')
 kxk = require('kxk')
-console.log('2')
 $ = kxk.$
 app = kxk.app
 childp = kxk.childp
@@ -17,15 +15,13 @@ os = kxk.os
 post = kxk.post
 slash = kxk.slash
 
-console.log('3')
 Kachel = require('./kachel')
 appIcon = require('./icon')
 utils = require('./utils')
-console.log('4')
 
 Appl = (function ()
 {
-    _k_.extend(Appl, Kachel);
+    _k_.extend(Appl, Kachel)
     function Appl (kachelId = 'appl')
     {
         this.kachelId = kachelId
@@ -39,14 +35,12 @@ Appl = (function ()
         this["onBounds"] = this["onBounds"].bind(this)
         this["onWin"] = this["onWin"].bind(this)
         this["onApp"] = this["onApp"].bind(this)
-        console.log('5')
         post.on('app',this.onApp)
         post.on('win',this.onWin)
         this.activated = false
         this.status = ''
         Appl.__super__.constructor.call(this,this.kachelId)
         this.onInitKachel(this.kachelId)
-        return Appl.__super__.constructor.apply(this, arguments)
     }
 
     Appl.prototype["onApp"] = function (action, app)
@@ -63,13 +57,13 @@ Appl = (function ()
         klog('onWin',wins)
         this.status = ''
         var list = _k_.list(wins)
-        for (var _45_14_ = 0; _45_14_ < list.length; _45_14_++)
+        for (var _40_14_ = 0; _40_14_ < list.length; _40_14_++)
         {
-            w = list[_45_14_]
+            w = list[_40_14_]
             var list1 = ['maximized','normal']
-            for (var _46_18_ = 0; _46_18_ < list1.length; _46_18_++)
+            for (var _41_18_ = 0; _41_18_ < list1.length; _41_18_++)
             {
-                c = list1[_46_18_]
+                c = list1[_41_18_]
                 if (w.status.startsWith(c))
                 {
                     this.status = w.status
@@ -84,9 +78,9 @@ Appl = (function ()
         if (_k_.empty(this.status))
         {
             var list2 = _k_.list(wins)
-            for (var _54_18_ = 0; _54_18_ < list2.length; _54_18_++)
+            for (var _49_18_ = 0; _49_18_ < list2.length; _49_18_++)
             {
-                w = list2[_54_18_]
+                w = list2[_49_18_]
                 if (w.status === 'minimized')
                 {
                     this.status = 'minimized'
@@ -137,9 +131,9 @@ Appl = (function ()
             if (!_k_.empty(this.status))
             {
                 var list = _k_.list(this.status.split(' '))
-                for (var _93_22_ = 0; _93_22_ < list.length; _93_22_++)
+                for (var _88_22_ = 0; _88_22_ < list.length; _88_22_++)
                 {
-                    s = list[_93_22_]
+                    s = list[_88_22_]
                     dot.classList.add(s)
                 }
             }
@@ -210,7 +204,7 @@ Appl = (function ()
         appIcon(this.kachelId,pngPath)
         this.setIcon(pngPath)
         base = slash.base(this.kachelId)
-        if (_k_.in(base,['Calendar']))
+        if (base === 'Calendar')
         {
             this.div.children[0].style.opacity = 0
             time = new Date()

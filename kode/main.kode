@@ -6,7 +6,7 @@
 000   000  000   000  000  000   000
 ###
 
-{ _, app, args, klog, os, post, slash } = require 'kxk'
+{ _, app, args, klog, os, post, prefs, slash } = require 'kxk'
 
 electron  = require 'electron'
 wxw       = require 'wxw'
@@ -52,7 +52,7 @@ KachelApp = new app
     onOtherInstance:    -> klog 'onOtherInstance'
     onQuit:             -> klog 'onQuit'
     onWinReady: (w) =>
-        log 'onWinReady'
+
         w.webContents.openDevTools(mode:'detach') if args.devtools
         
         # electron.powerSaveBlocker.start 'prevent-app-suspension'
@@ -81,9 +81,9 @@ KachelApp = new app
                 
             electron.globalShortcut.register 'F11' -> action 'taskbar'
             
-            # keys = prefs.get 'keys' keys
-            # prefs.set 'keys' keys
-            # prefs.save()
+            keys = prefs.get 'keys' keys
+            prefs.set 'keys' keys
+            prefs.save()
             
             for k,v of keys
                 electron.globalShortcut.register v, ((a) -> -> action a)(k)
@@ -92,8 +92,6 @@ KachelApp = new app
         
         w.show()
         
-log 'KachelApp' app?
-
 #  0000000    0000000  000000000  000   0000000   000   000  
 # 000   000  000          000     000  000   000  0000  000  
 # 000000000  000          000     000  000   000  000 0 000  

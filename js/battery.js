@@ -1,4 +1,4 @@
-// monsterkodi/kode 0.199.0
+// monsterkodi/kode 0.200.0
 
 var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}}
 
@@ -12,7 +12,7 @@ Kachel = require('./kachel')
 
 Battery = (function ()
 {
-    _k_.extend(Battery, Kachel);
+    _k_.extend(Battery, Kachel)
     function Battery (kachelId = 'battery')
     {
         this.kachelId = kachelId
@@ -21,7 +21,6 @@ Battery = (function ()
         Battery.__super__.constructor.call(this,this.kachelId)
         post.on('sysinfo',this.onData)
         this.init()
-        return Battery.__super__.constructor.apply(this, arguments)
     }
 
     Battery.prototype["onData"] = function (data)

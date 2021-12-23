@@ -29,14 +29,14 @@ window.onload = ->
 
     post.setMaxListeners 30
     
-    Appl = require './appl'
-    Data = require './data'
-    Clock = require './clock'
-    Dish = require './sysdish'
-    Konrad = require './konrad'
+    Appl    = require './appl'
+    Data    = require './data'
+    Clock   = require './clock'
+    Dish    = require './sysdish'
+    Konrad  = require './konrad'
     Battery = require './battery'
-    Cores = require './cores'
-    Volume = require './volume'
+    Cores   = require './cores'
+    Volume  = require './volume'
     
     new Clock
     new Dish

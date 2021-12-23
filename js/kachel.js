@@ -1,4 +1,4 @@
-// monsterkodi/kode 0.199.0
+// monsterkodi/kode 0.200.0
 
 var _k_
 
@@ -28,6 +28,7 @@ Kachel = (function ()
         this["setIcon"] = this["setIcon"].bind(this)
         this["onContextMenu"] = this["onContextMenu"].bind(this)
         this["onKeyDown"] = this["onKeyDown"].bind(this)
+        console.log(`Kachel.${this.kachelId}`)
         this.main = $('#main')
         this.div = elem({class:`kachel ${this.constructor.name}`})
         this.div.setAttribute('tabindex','0')
@@ -43,7 +44,7 @@ Kachel = (function ()
 
     Kachel.prototype["onKeyDown"] = function (event)
     {
-        var key, _33_36_
+        var key, _34_36_
 
         key = keyinfo.forEvent(event).key
         switch (key)
@@ -63,7 +64,7 @@ Kachel = (function ()
 
     Kachel.prototype["neighborKachel"] = function (direction)
     {
-        var br, _40_56_, _41_60_
+        var br, _41_56_, _42_60_
 
         br = this.div.getBoundingClientRect()
         if (br.width < 100)

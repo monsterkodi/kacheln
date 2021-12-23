@@ -1,4 +1,4 @@
-// monsterkodi/kode 0.199.0
+// monsterkodi/kode 0.200.0
 
 var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}}
 
@@ -11,7 +11,7 @@ utils = require('./utils')
 
 Clock = (function ()
 {
-    _k_.extend(Clock, Kachel);
+    _k_.extend(Clock, Kachel)
     function Clock (kachelId = 'clock')
     {
         this.kachelId = kachelId
@@ -20,7 +20,6 @@ Clock = (function ()
         Clock.__super__.constructor.call(this,this.kachelId)
         post.on('clock',this.onData)
         this.onLoad()
-        return Clock.__super__.constructor.apply(this, arguments)
     }
 
     Clock.prototype["onData"] = function (data)
@@ -38,6 +37,7 @@ Clock = (function ()
     {
         var face, svg
 
+        console.log('onLoad CLocK')
         svg = utils.svg(100,100,'clock')
         this.div.appendChild(svg)
         face = utils.circle(45,0,0,'face',svg)
