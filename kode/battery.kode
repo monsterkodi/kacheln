@@ -11,7 +11,7 @@
 utils   = require './utils'
 Kachel  = require './kachel'
 
-class Battery extends Kachel
+function Battery extends Kachel
         
     @: (@kachelId='battery') -> 
         
@@ -32,13 +32,13 @@ class Battery extends Kachel
     init: ->
  
         @div.innerHTML = ''
-        svg = utils.svg width:100 height:100
+        svg = utils.svg 100 100
         @div.appendChild svg
         @cycles = elem class:'battery_cycles' parent:@div, text:'?'
 
-        body =     utils.rect x:-30 y:-40 w:60 h:80 r:8 clss:'battery_bg' svg:svg
-        bobl =     utils.rect x:-15 y:-45 w:30 h:10 r:8 clss:'battery_bg' svg:svg
-        @battery = utils.rect x:-25 y:-35 w:50 h:70 r:5 clss:'battery_loaded' svg:svg
+        body =     utils.rect -30 -40 60 80 8 'battery_bg' svg
+        bobl =     utils.rect -15 -45 30 10 8 'battery_bg' svg
+        @battery = utils.rect -25 -35 50 70 5 'battery_loaded' svg
         @battery.setAttribute 'fill' '#222222'
             
      # 0000000    00000000    0000000   000   000

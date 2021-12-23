@@ -11,7 +11,7 @@
 utils   = require './utils'
 Kachel  = require './kachel'
 
-class Sysdish extends Kachel
+function Sysdish extends Kachel
         
     @: (@kachelId='sysdish') -> 
         
@@ -115,22 +115,22 @@ class Sysdish extends Kachel
     initDish: ->
  
         @div.innerHTML = ''
-        svg = utils.svg clss:'dish'
+        svg = utils.svg 100 100 'dish'
         @div.appendChild svg
 
-        pie = utils.circle radius:45 clss:'sysdish_disk_bgr' svg:svg
-        @dskrPie = utils.pie svg:svg, radius:40 clss:'sysdish_disk_read'  angle:0
-        @dskwPie = utils.pie svg:svg, radius:40 clss:'sysdish_disk_write' angle:0, start:180
+        pie = utils.circle 45 0 0 'sysdish_disk_bgr' svg
+        @dskrPie = utils.pie 40 0 0 0 0   'sysdish_disk_read'  svg
+        @dskwPie = utils.pie 40 0 0 0 180 'sysdish_disk_write' svg
         
-        @netrPie = utils.pie svg:svg, radius:40 clss:'sysdish_net_recv' angle:0
-        @nettPie = utils.pie svg:svg, radius:40 clss:'sysdish_net_send' angle:0 start:180
+        @netrPie = utils.pie 40 0 0 0 0   'sysdish_net_recv' svg
+        @nettPie = utils.pie 40 0 0 0 180 'sysdish_net_send' svg
             
-        pie = utils.circle radius:40 clss:'sysdish_load_bgr' svg:svg
-        @sysPie = utils.pie svg:pie, radius:40 clss:'sysdish_load_sys' angle:0
-        @usrPie = utils.pie svg:pie, radius:40 clss:'sysdish_load_usr' angle:0
+        pie = utils.circle 40 0 0 'sysdish_load_bgr' svg
+        @sysPie = utils.pie 40 0 0 0 0 'sysdish_load_sys' pie
+        @usrPie = utils.pie 40 0 0 0 0 'sysdish_load_usr' pie
 
-        @memuPie = utils.pie svg:svg, radius:40 clss:'sysdish_mem_used'   angle:0
-        @memaPie = utils.pie svg:svg, radius:40 clss:'sysdish_mem_active' angle:0
+        @memuPie = utils.pie 40 0 0 0 0 'sysdish_mem_used'   svg
+        @memaPie = utils.pie 40 0 0 0 0 'sysdish_mem_active' svg
         
      # 0000000    00000000    0000000   000   000  0000000    000   0000000  000   000
      # 000   000  000   000  000   000  000 0 000  000   000  000  000       000   000

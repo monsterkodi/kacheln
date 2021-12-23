@@ -12,7 +12,7 @@ wxw     = require 'wxw'
 utils   = require './utils'
 Kachel  = require './kachel'
 
-class Volume extends Kachel
+function Volume extends Kachel
         
     @: (@kachelId='volume') ->
         
@@ -90,11 +90,11 @@ class Volume extends Kachel
     
     onLoad: ->
         
-        svg = utils.svg clss:'volume'
+        svg = utils.svg 100 100 'volume'
         @div.appendChild svg
         
-        utils.circle radius:40 clss:'scala' svg:svg
-        face = utils.circle radius:36 clss:'knob' svg:svg
+        utils.circle 40 0 0 'scala' svg
+        face = utils.circle 36 0 0 'knob' svg
         
         for m in [1..11]
             

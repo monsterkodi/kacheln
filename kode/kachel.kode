@@ -8,7 +8,7 @@
 
 { $, app, elem, keyinfo, open, os, slash, stopEvent } = require 'kxk'
 
-class Kachel
+function Kachel
 
     @: (@kachelId='kachel') ->
     

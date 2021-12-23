@@ -1,116 +1,95 @@
-// koffee 1.14.0
+// monsterkodi/kode 0.199.0
 
-/*
-0000000     0000000   000000000  000000000  00000000  00000000   000   000  
-000   000  000   000     000        000     000       000   000   000 000   
-0000000    000000000     000        000     0000000   0000000      00000    
-000   000  000   000     000        000     000       000   000     000     
-0000000    000   000     000        000     00000000  000   000     000
- */
-var Battery, Kachel, elem, post, ref, utils,
-    bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    hasProp = {}.hasOwnProperty;
+var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}}
 
-ref = require('kxk'), elem = ref.elem, post = ref.post;
+var Battery, elem, Kachel, post, utils
 
-utils = require('./utils');
+elem = require('kxk').elem
+post = require('kxk').post
 
-Kachel = require('./kachel');
+utils = require('./utils')
+Kachel = require('./kachel')
 
-Battery = (function(superClass) {
-    extend(Battery, superClass);
-
-    function Battery(kachelId) {
-        this.kachelId = kachelId != null ? kachelId : 'battery';
-        this.onData = bind(this.onData, this);
-        Battery.__super__.constructor.call(this, this.kachelId);
-        post.on('sysinfo', this.onData);
-        this.init();
+Battery = (function ()
+{
+    _k_.extend(Battery, Kachel);
+    function Battery (kachelId = 'battery')
+    {
+        this.kachelId = kachelId
+    
+        this["onData"] = this["onData"].bind(this)
+        Battery.__super__.constructor.call(this,this.kachelId)
+        post.on('sysinfo',this.onData)
+        this.init()
+        return Battery.__super__.constructor.apply(this, arguments)
     }
 
-    Battery.prototype.onData = function(data) {
-        this.data = data;
-        return this.draw();
-    };
+    Battery.prototype["onData"] = function (data)
+    {
+        this.data = data
+    
+        return this.draw()
+    }
 
-    Battery.prototype.init = function() {
-        var bobl, body, svg;
-        this.div.innerHTML = '';
-        svg = utils.svg({
-            width: 100,
-            height: 100
-        });
-        this.div.appendChild(svg);
-        this.cycles = elem({
-            "class": 'battery_cycles',
-            parent: this.div,
-            text: '?'
-        });
-        body = utils.rect({
-            x: -30,
-            y: -40,
-            w: 60,
-            h: 80,
-            r: 8,
-            clss: 'battery_bg',
-            svg: svg
-        });
-        bobl = utils.rect({
-            x: -15,
-            y: -45,
-            w: 30,
-            h: 10,
-            r: 8,
-            clss: 'battery_bg',
-            svg: svg
-        });
-        this.battery = utils.rect({
-            x: -25,
-            y: -35,
-            w: 50,
-            h: 70,
-            r: 5,
-            clss: 'battery_loaded',
-            svg: svg
-        });
-        return this.battery.setAttribute('fill', '#222222');
-    };
+    Battery.prototype["init"] = function ()
+    {
+        var bobl, body, svg
 
-    Battery.prototype.draw = function() {
-        var fill, ref1;
-        if (!((ref1 = this.data) != null ? ref1.battery : void 0)) {
-            return;
+        this.div.innerHTML = ''
+        svg = utils.svg(100,100)
+        this.div.appendChild(svg)
+        this.cycles = elem({class:'battery_cycles',parent:this.div,text:'?'})
+        body = utils.rect(-30,-40,60,80,8,'battery_bg',svg)
+        bobl = utils.rect(-15,-45,30,10,8,'battery_bg',svg)
+        this.battery = utils.rect(-25,-35,50,70,5,'battery_loaded',svg)
+        return this.battery.setAttribute('fill','#222222')
+    }
+
+    Battery.prototype["draw"] = function ()
+    {
+        var fill, _52_27_
+
+        if (!(this.data != null ? this.data.battery : undefined))
+        {
+            return
         }
-        if (!this.battery) {
-            return;
+        if (!this.battery)
+        {
+            return
         }
-        if (this.data.battery.plugged) {
-            if (this.data.battery.charging) {
-                fill = '#888';
-            } else {
-                fill = '#444';
+        if (this.data.battery.plugged)
+        {
+            if (this.data.battery.charging)
+            {
+                fill = '#888'
             }
-        } else {
-            if (this.data.battery.percent <= 10) {
-                fill = '#f00';
-            } else if (this.data.battery.percent <= 20) {
-                fill = '#f80';
-            } else {
-                fill = '#080';
+            else
+            {
+                fill = '#444'
             }
         }
-        this.battery.setAttribute('y', -35 + 70 - 70 * this.data.battery.loaded);
-        this.battery.setAttribute('height', 70 * this.data.battery.loaded);
-        this.battery.setAttribute('fill', fill);
-        return this.cycles.innerHTML = this.data.battery.cycles;
-    };
+        else
+        {
+            if (this.data.battery.percent <= 10)
+            {
+                fill = '#f00'
+            }
+            else if (this.data.battery.percent <= 20)
+            {
+                fill = '#f80'
+            }
+            else
+            {
+                fill = '#080'
+            }
+        }
+        this.battery.setAttribute('y',-35 + 70 - 70 * this.data.battery.loaded)
+        this.battery.setAttribute('height',70 * this.data.battery.loaded)
+        this.battery.setAttribute('fill',fill)
+        return this.cycles.innerHTML = this.data.battery.cycles
+    }
 
-    return Battery;
+    return Battery
+})()
 
-})(Kachel);
-
-module.exports = Battery;
-
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiYmF0dGVyeS5qcyIsInNvdXJjZVJvb3QiOiIuLi9jb2ZmZWUiLCJzb3VyY2VzIjpbImJhdHRlcnkuY29mZmVlIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7O0FBQUE7Ozs7Ozs7QUFBQSxJQUFBLHVDQUFBO0lBQUE7Ozs7QUFRQSxNQUFpQixPQUFBLENBQVEsS0FBUixDQUFqQixFQUFFLGVBQUYsRUFBUTs7QUFFUixLQUFBLEdBQVUsT0FBQSxDQUFRLFNBQVI7O0FBQ1YsTUFBQSxHQUFVLE9BQUEsQ0FBUSxVQUFSOztBQUVKOzs7SUFFQyxpQkFBQyxRQUFEO1FBQUMsSUFBQyxDQUFBLDhCQUFELFdBQVU7O1FBRVYseUNBQU0sSUFBQyxDQUFBLFFBQVA7UUFFQSxJQUFJLENBQUMsRUFBTCxDQUFRLFNBQVIsRUFBa0IsSUFBQyxDQUFBLE1BQW5CO1FBRUEsSUFBQyxDQUFBLElBQUQsQ0FBQTtJQU5EOztzQkFRSCxNQUFBLEdBQVEsU0FBQyxJQUFEO1FBQUMsSUFBQyxDQUFBLE9BQUQ7ZUFBVSxJQUFDLENBQUEsSUFBRCxDQUFBO0lBQVg7O3NCQVFSLElBQUEsR0FBTSxTQUFBO0FBRUYsWUFBQTtRQUFBLElBQUMsQ0FBQSxHQUFHLENBQUMsU0FBTCxHQUFpQjtRQUNqQixHQUFBLEdBQU0sS0FBSyxDQUFDLEdBQU4sQ0FBVTtZQUFBLEtBQUEsRUFBTSxHQUFOO1lBQVUsTUFBQSxFQUFPLEdBQWpCO1NBQVY7UUFDTixJQUFDLENBQUEsR0FBRyxDQUFDLFdBQUwsQ0FBaUIsR0FBakI7UUFDQSxJQUFDLENBQUEsTUFBRCxHQUFVLElBQUEsQ0FBSztZQUFBLENBQUEsS0FBQSxDQUFBLEVBQU0sZ0JBQU47WUFBdUIsTUFBQSxFQUFPLElBQUMsQ0FBQSxHQUEvQjtZQUFvQyxJQUFBLEVBQUssR0FBekM7U0FBTDtRQUVWLElBQUEsR0FBVyxLQUFLLENBQUMsSUFBTixDQUFXO1lBQUEsQ0FBQSxFQUFFLENBQUMsRUFBSDtZQUFNLENBQUEsRUFBRSxDQUFDLEVBQVQ7WUFBWSxDQUFBLEVBQUUsRUFBZDtZQUFpQixDQUFBLEVBQUUsRUFBbkI7WUFBc0IsQ0FBQSxFQUFFLENBQXhCO1lBQTBCLElBQUEsRUFBSyxZQUEvQjtZQUE0QyxHQUFBLEVBQUksR0FBaEQ7U0FBWDtRQUNYLElBQUEsR0FBVyxLQUFLLENBQUMsSUFBTixDQUFXO1lBQUEsQ0FBQSxFQUFFLENBQUMsRUFBSDtZQUFNLENBQUEsRUFBRSxDQUFDLEVBQVQ7WUFBWSxDQUFBLEVBQUUsRUFBZDtZQUFpQixDQUFBLEVBQUUsRUFBbkI7WUFBc0IsQ0FBQSxFQUFFLENBQXhCO1lBQTBCLElBQUEsRUFBSyxZQUEvQjtZQUE0QyxHQUFBLEVBQUksR0FBaEQ7U0FBWDtRQUNYLElBQUMsQ0FBQSxPQUFELEdBQVcsS0FBSyxDQUFDLElBQU4sQ0FBVztZQUFBLENBQUEsRUFBRSxDQUFDLEVBQUg7WUFBTSxDQUFBLEVBQUUsQ0FBQyxFQUFUO1lBQVksQ0FBQSxFQUFFLEVBQWQ7WUFBaUIsQ0FBQSxFQUFFLEVBQW5CO1lBQXNCLENBQUEsRUFBRSxDQUF4QjtZQUEwQixJQUFBLEVBQUssZ0JBQS9CO1lBQWdELEdBQUEsRUFBSSxHQUFwRDtTQUFYO2VBQ1gsSUFBQyxDQUFBLE9BQU8sQ0FBQyxZQUFULENBQXNCLE1BQXRCLEVBQTZCLFNBQTdCO0lBVkU7O3NCQWtCTCxJQUFBLEdBQU0sU0FBQTtBQUVILFlBQUE7UUFBQSxJQUFVLG1DQUFTLENBQUUsaUJBQXJCO0FBQUEsbUJBQUE7O1FBQ0EsSUFBVSxDQUFJLElBQUMsQ0FBQSxPQUFmO0FBQUEsbUJBQUE7O1FBRUEsSUFBRyxJQUFDLENBQUEsSUFBSSxDQUFDLE9BQU8sQ0FBQyxPQUFqQjtZQUNJLElBQUcsSUFBQyxDQUFBLElBQUksQ0FBQyxPQUFPLENBQUMsUUFBakI7Z0JBQ0ksSUFBQSxHQUFPLE9BRFg7YUFBQSxNQUFBO2dCQUdJLElBQUEsR0FBTyxPQUhYO2FBREo7U0FBQSxNQUFBO1lBTUksSUFBRyxJQUFDLENBQUEsSUFBSSxDQUFDLE9BQU8sQ0FBQyxPQUFkLElBQXlCLEVBQTVCO2dCQUNJLElBQUEsR0FBTyxPQURYO2FBQUEsTUFFSyxJQUFHLElBQUMsQ0FBQSxJQUFJLENBQUMsT0FBTyxDQUFDLE9BQWQsSUFBeUIsRUFBNUI7Z0JBQ0QsSUFBQSxHQUFPLE9BRE47YUFBQSxNQUFBO2dCQUdELElBQUEsR0FBTyxPQUhOO2FBUlQ7O1FBYUEsSUFBQyxDQUFBLE9BQU8sQ0FBQyxZQUFULENBQXNCLEdBQXRCLEVBQTBCLENBQUMsRUFBRCxHQUFJLEVBQUosR0FBTyxFQUFBLEdBQUcsSUFBQyxDQUFBLElBQUksQ0FBQyxPQUFPLENBQUMsTUFBbEQ7UUFDQSxJQUFDLENBQUEsT0FBTyxDQUFDLFlBQVQsQ0FBc0IsUUFBdEIsRUFBK0IsRUFBQSxHQUFHLElBQUMsQ0FBQSxJQUFJLENBQUMsT0FBTyxDQUFDLE1BQWhEO1FBQ0EsSUFBQyxDQUFBLE9BQU8sQ0FBQyxZQUFULENBQXNCLE1BQXRCLEVBQTZCLElBQTdCO2VBRUEsSUFBQyxDQUFBLE1BQU0sQ0FBQyxTQUFSLEdBQW9CLElBQUMsQ0FBQSxJQUFJLENBQUMsT0FBTyxDQUFDO0lBdEIvQjs7OztHQXBDVzs7QUE0RHRCLE1BQU0sQ0FBQyxPQUFQLEdBQWlCIiwic291cmNlc0NvbnRlbnQiOlsiIyMjXG4wMDAwMDAwICAgICAwMDAwMDAwICAgMDAwMDAwMDAwICAwMDAwMDAwMDAgIDAwMDAwMDAwICAwMDAwMDAwMCAgIDAwMCAgIDAwMCAgXG4wMDAgICAwMDAgIDAwMCAgIDAwMCAgICAgMDAwICAgICAgICAwMDAgICAgIDAwMCAgICAgICAwMDAgICAwMDAgICAwMDAgMDAwICAgXG4wMDAwMDAwICAgIDAwMDAwMDAwMCAgICAgMDAwICAgICAgICAwMDAgICAgIDAwMDAwMDAgICAwMDAwMDAwICAgICAgMDAwMDAgICAgXG4wMDAgICAwMDAgIDAwMCAgIDAwMCAgICAgMDAwICAgICAgICAwMDAgICAgIDAwMCAgICAgICAwMDAgICAwMDAgICAgIDAwMCAgICAgXG4wMDAwMDAwICAgIDAwMCAgIDAwMCAgICAgMDAwICAgICAgICAwMDAgICAgIDAwMDAwMDAwICAwMDAgICAwMDAgICAgIDAwMCAgICAgXG4jIyNcblxueyBlbGVtLCBwb3N0IH0gPSByZXF1aXJlICdreGsnXG5cbnV0aWxzICAgPSByZXF1aXJlICcuL3V0aWxzJ1xuS2FjaGVsICA9IHJlcXVpcmUgJy4va2FjaGVsJ1xuXG5jbGFzcyBCYXR0ZXJ5IGV4dGVuZHMgS2FjaGVsXG4gICAgICAgIFxuICAgIEA6IChAa2FjaGVsSWQ9J2JhdHRlcnknKSAtPiBcbiAgICAgICAgXG4gICAgICAgIHN1cGVyIEBrYWNoZWxJZFxuICAgICAgICBcbiAgICAgICAgcG9zdC5vbiAnc3lzaW5mbycgQG9uRGF0YVxuICAgICAgICBcbiAgICAgICAgQGluaXQoKVxuICAgIFxuICAgIG9uRGF0YTogKEBkYXRhKSA9PiBAZHJhdygpXG4gICAgICAgIFxuICAgICMgMDAwICAwMDAgICAwMDAgIDAwMCAgMDAwMDAwMDAwXG4gICAgIyAwMDAgIDAwMDAgIDAwMCAgMDAwICAgICAwMDAgICBcbiAgICAjIDAwMCAgMDAwIDAgMDAwICAwMDAgICAgIDAwMCAgIFxuICAgICMgMDAwICAwMDAgIDAwMDAgIDAwMCAgICAgMDAwICAgXG4gICAgIyAwMDAgIDAwMCAgIDAwMCAgMDAwICAgICAwMDAgICBcbiAgICBcbiAgICBpbml0OiAtPlxuIFxuICAgICAgICBAZGl2LmlubmVySFRNTCA9ICcnXG4gICAgICAgIHN2ZyA9IHV0aWxzLnN2ZyB3aWR0aDoxMDAgaGVpZ2h0OjEwMFxuICAgICAgICBAZGl2LmFwcGVuZENoaWxkIHN2Z1xuICAgICAgICBAY3ljbGVzID0gZWxlbSBjbGFzczonYmF0dGVyeV9jeWNsZXMnIHBhcmVudDpAZGl2LCB0ZXh0Oic/J1xuXG4gICAgICAgIGJvZHkgPSAgICAgdXRpbHMucmVjdCB4Oi0zMCB5Oi00MCB3OjYwIGg6ODAgcjo4IGNsc3M6J2JhdHRlcnlfYmcnIHN2ZzpzdmdcbiAgICAgICAgYm9ibCA9ICAgICB1dGlscy5yZWN0IHg6LTE1IHk6LTQ1IHc6MzAgaDoxMCByOjggY2xzczonYmF0dGVyeV9iZycgc3ZnOnN2Z1xuICAgICAgICBAYmF0dGVyeSA9IHV0aWxzLnJlY3QgeDotMjUgeTotMzUgdzo1MCBoOjcwIHI6NSBjbHNzOidiYXR0ZXJ5X2xvYWRlZCcgc3ZnOnN2Z1xuICAgICAgICBAYmF0dGVyeS5zZXRBdHRyaWJ1dGUgJ2ZpbGwnICcjMjIyMjIyJ1xuICAgICAgICAgICAgXG4gICAgICMgMDAwMDAwMCAgICAwMDAwMDAwMCAgICAwMDAwMDAwICAgMDAwICAgMDAwXG4gICAgICMgMDAwICAgMDAwICAwMDAgICAwMDAgIDAwMCAgIDAwMCAgMDAwIDAgMDAwXG4gICAgICMgMDAwICAgMDAwICAwMDAwMDAwICAgIDAwMDAwMDAwMCAgMDAwMDAwMDAwXG4gICAgICMgMDAwICAgMDAwICAwMDAgICAwMDAgIDAwMCAgIDAwMCAgMDAwICAgMDAwXG4gICAgICMgMDAwMDAwMCAgICAwMDAgICAwMDAgIDAwMCAgIDAwMCAgMDAgICAgIDAwXG5cbiAgICAgZHJhdzogLT5cblxuICAgICAgICByZXR1cm4gaWYgbm90IEBkYXRhPy5iYXR0ZXJ5XG4gICAgICAgIHJldHVybiBpZiBub3QgQGJhdHRlcnlcblxuICAgICAgICBpZiBAZGF0YS5iYXR0ZXJ5LnBsdWdnZWRcbiAgICAgICAgICAgIGlmIEBkYXRhLmJhdHRlcnkuY2hhcmdpbmdcbiAgICAgICAgICAgICAgICBmaWxsID0gJyM4ODgnXG4gICAgICAgICAgICBlbHNlXG4gICAgICAgICAgICAgICAgZmlsbCA9ICcjNDQ0J1xuICAgICAgICBlbHNlXG4gICAgICAgICAgICBpZiBAZGF0YS5iYXR0ZXJ5LnBlcmNlbnQgPD0gMTBcbiAgICAgICAgICAgICAgICBmaWxsID0gJyNmMDAnXG4gICAgICAgICAgICBlbHNlIGlmIEBkYXRhLmJhdHRlcnkucGVyY2VudCA8PSAyMFxuICAgICAgICAgICAgICAgIGZpbGwgPSAnI2Y4MCdcbiAgICAgICAgICAgIGVsc2VcbiAgICAgICAgICAgICAgICBmaWxsID0gJyMwODAnXG4gICAgICAgICBcbiAgICAgICAgQGJhdHRlcnkuc2V0QXR0cmlidXRlICd5JyAtMzUrNzAtNzAqQGRhdGEuYmF0dGVyeS5sb2FkZWRcbiAgICAgICAgQGJhdHRlcnkuc2V0QXR0cmlidXRlICdoZWlnaHQnIDcwKkBkYXRhLmJhdHRlcnkubG9hZGVkXG4gICAgICAgIEBiYXR0ZXJ5LnNldEF0dHJpYnV0ZSAnZmlsbCcgZmlsbFxuICAgICAgICBcbiAgICAgICAgQGN5Y2xlcy5pbm5lckhUTUwgPSBAZGF0YS5iYXR0ZXJ5LmN5Y2xlc1xuICAgICAgICAgICAgICAgIFxubW9kdWxlLmV4cG9ydHMgPSBCYXR0ZXJ5XG4iXX0=
-//# sourceURL=../coffee/battery.coffee
+module.exports = Battery

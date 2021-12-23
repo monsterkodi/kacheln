@@ -11,7 +11,7 @@
 utils   = require './utils'
 Kachel  = require './kachel'
 
-class Cores extends Kachel
+function Cores extends Kachel
         
     @: (@kachelId='cores') -> 
         
@@ -34,17 +34,17 @@ class Cores extends Kachel
     init: ->
  
         @div.innerHTML = ''
-        svg = utils.svg width:100 height:100
+        svg = utils.svg 100 100
         @div.appendChild svg
 
-        body = utils.rect x:-40 y:-40 w:80 h:80 r:8 clss:'core_bg' svg:svg
+        body = utils.rect -40 -40 80 80 8 'core_bg' svg
 
         for i in 0...8
-            r = utils.rect x:-36+i*9 y:-36 w:8 h:72 r:3 svg:svg, clss:'core_load'
+            r = utils.rect -36+i*9, -36 8 72 3 'core_load' svg
         
         @cores = []
         for i in 0...8
-            @cores.push utils.rect x:-36+i*9 y:30 w:8 h:6 r:3 svg:svg
+            @cores.push utils.rect -36+i*9 30 8 6 3 '' svg
             @cores[i].setAttribute 'fill' @colors[0]
             
      # 0000000    00000000    0000000   000   000

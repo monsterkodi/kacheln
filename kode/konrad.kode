@@ -10,7 +10,7 @@
 
 Kachel = require './kachel'
 
-class Konrad extends Kachel
+function Konrad extends Kachel
         
     @: (@kachelId='konrad') ->
 

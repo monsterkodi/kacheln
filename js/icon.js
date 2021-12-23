@@ -1,59 +1,50 @@
-// koffee 1.14.0
+// monsterkodi/kode 0.199.0
 
-/*
-000   0000000   0000000   000   000  
-000  000       000   000  0000  000  
-000  000       000   000  000 0 000  
-000  000       000   000  000  0000  
-000   0000000   0000000   000   000
- */
-var appIcon, fakeIcon, fs, os, ref, slash, wxw;
+var _k_
 
-ref = require('kxk'), fs = ref.fs, os = ref.os, slash = ref.slash;
+var appIcon, fakeIcon, fs, os, slash, wxw
 
-wxw = require('wxw');
+fs = require('kxk').fs
+os = require('kxk').os
+slash = require('kxk').slash
 
-fakeIcon = function(exePath, pngPath) {
-    var base, err, fakeicon, icon, iconMap, targetfile;
-    iconMap = {
-        recycle: 'recycle',
-        recycledot: 'recycledot',
-        mingw32: 'terminal',
-        mingw64: 'terminal',
-        msys2: 'terminaldark',
-        mintty: 'terminaldark',
-        procexp64: 'procexp',
-        Calculator: 'Calculator',
-        Settings: 'Settings',
-        Mail: 'Mail',
-        'Microsoft Store': 'Microsoft Store'
-    };
-    base = slash.base(exePath);
-    if (icon = iconMap[base]) {
-        targetfile = slash.resolve(pngPath != null ? pngPath : base + '.png');
-        fakeicon = slash.join(__dirname, '..', 'icons', icon + '.png');
-        try {
-            fs.copyFileSync(fakeicon, targetfile);
-            return true;
-        } catch (error) {
-            err = error;
-            console.error(err);
+wxw = require('wxw')
+
+fakeIcon = function (exePath, pngPath)
+{
+    var base, fakeicon, icon, iconMap, targetfile
+
+    iconMap = {recycle:'recycle',recycledot:'recycledot',mingw32:'terminal',mingw64:'terminal',msys2:'terminaldark',mintty:'terminaldark',procexp64:'procexp',Calculator:'Calculator',Settings:'Settings',Mail:'Mail','Microsoft Store':'Microsoft Store'}
+    base = slash.base(exePath)
+    if (icon = iconMap[base])
+    {
+        targetfile = slash.resolve((pngPath != null ? pngPath : base + '.png'))
+        fakeicon = slash.join(__dirname,'..','icons',icon + '.png')
+        try
+        {
+            fs.copyFileSync(fakeicon,targetfile)
+            return true
+        }
+        catch (err)
+        {
+            console.error(err)
         }
     }
-    return false;
-};
+    return false
+}
 
-appIcon = function(exePath, pngPath) {
-    if (os.platform() === 'win32') {
-        if (!fakeIcon(exePath, pngPath)) {
-            return wxw('icon', exePath, pngPath);
+appIcon = function (exePath, pngPath)
+{
+    if (os.platform() === 'win32')
+    {
+        if (!fakeIcon(exePath,pngPath))
+        {
+            return wxw('icon',exePath,pngPath)
         }
-    } else {
-        return wxw('icon', exePath, pngPath);
     }
-};
-
-module.exports = appIcon;
-
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaWNvbi5qcyIsInNvdXJjZVJvb3QiOiIuLi9jb2ZmZWUiLCJzb3VyY2VzIjpbImljb24uY29mZmVlIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7O0FBQUE7Ozs7Ozs7QUFBQSxJQUFBOztBQVFBLE1BQW9CLE9BQUEsQ0FBUSxLQUFSLENBQXBCLEVBQUUsV0FBRixFQUFNLFdBQU4sRUFBVTs7QUFFVixHQUFBLEdBQU0sT0FBQSxDQUFRLEtBQVI7O0FBRU4sUUFBQSxHQUFXLFNBQUMsT0FBRCxFQUFVLE9BQVY7QUFFUCxRQUFBO0lBQUEsT0FBQSxHQUNJO1FBQUEsT0FBQSxFQUFZLFNBQVo7UUFDQSxVQUFBLEVBQVksWUFEWjtRQUVBLE9BQUEsRUFBWSxVQUZaO1FBR0EsT0FBQSxFQUFZLFVBSFo7UUFJQSxLQUFBLEVBQVksY0FKWjtRQUtBLE1BQUEsRUFBWSxjQUxaO1FBTUEsU0FBQSxFQUFZLFNBTlo7UUFPQSxVQUFBLEVBQVksWUFQWjtRQVNBLFFBQUEsRUFBWSxVQVRaO1FBVUEsSUFBQSxFQUFZLE1BVlo7UUFXQSxpQkFBQSxFQUFtQixpQkFYbkI7O0lBYUosSUFBQSxHQUFPLEtBQUssQ0FBQyxJQUFOLENBQVcsT0FBWDtJQUVQLElBQUcsSUFBQSxHQUFPLE9BQVEsQ0FBQSxJQUFBLENBQWxCO1FBQ0ksVUFBQSxHQUFhLEtBQUssQ0FBQyxPQUFOLG1CQUFjLFVBQVUsSUFBQSxHQUFPLE1BQS9CO1FBQ2IsUUFBQSxHQUFXLEtBQUssQ0FBQyxJQUFOLENBQVcsU0FBWCxFQUFzQixJQUF0QixFQUEyQixPQUEzQixFQUFtQyxJQUFBLEdBQU8sTUFBMUM7QUFDWDtZQUNJLEVBQUUsQ0FBQyxZQUFILENBQWdCLFFBQWhCLEVBQTBCLFVBQTFCO0FBQ0EsbUJBQU8sS0FGWDtTQUFBLGFBQUE7WUFHTTtZQUNILE9BQUEsQ0FBQyxLQUFELENBQU8sR0FBUCxFQUpIO1NBSEo7O1dBUUE7QUExQk87O0FBNEJYLE9BQUEsR0FBVSxTQUFDLE9BQUQsRUFBVSxPQUFWO0lBRU4sSUFBRyxFQUFFLENBQUMsUUFBSCxDQUFBLENBQUEsS0FBaUIsT0FBcEI7UUFDSSxJQUFHLENBQUksUUFBQSxDQUFTLE9BQVQsRUFBa0IsT0FBbEIsQ0FBUDttQkFDSSxHQUFBLENBQUksTUFBSixFQUFXLE9BQVgsRUFBb0IsT0FBcEIsRUFESjtTQURKO0tBQUEsTUFBQTtlQUlJLEdBQUEsQ0FBSSxNQUFKLEVBQVcsT0FBWCxFQUFvQixPQUFwQixFQUpKOztBQUZNOztBQVFWLE1BQU0sQ0FBQyxPQUFQLEdBQWlCIiwic291cmNlc0NvbnRlbnQiOlsiIyMjXG4wMDAgICAwMDAwMDAwICAgMDAwMDAwMCAgIDAwMCAgIDAwMCAgXG4wMDAgIDAwMCAgICAgICAwMDAgICAwMDAgIDAwMDAgIDAwMCAgXG4wMDAgIDAwMCAgICAgICAwMDAgICAwMDAgIDAwMCAwIDAwMCAgXG4wMDAgIDAwMCAgICAgICAwMDAgICAwMDAgIDAwMCAgMDAwMCAgXG4wMDAgICAwMDAwMDAwICAgMDAwMDAwMCAgIDAwMCAgIDAwMCAgXG4jIyNcblxueyBmcywgb3MsIHNsYXNoIH0gPSByZXF1aXJlICdreGsnXG5cbnd4dyA9IHJlcXVpcmUgJ3d4dydcblxuZmFrZUljb24gPSAoZXhlUGF0aCwgcG5nUGF0aCkgLT5cbiAgICBcbiAgICBpY29uTWFwID0gXG4gICAgICAgIHJlY3ljbGU6ICAgICdyZWN5Y2xlJ1xuICAgICAgICByZWN5Y2xlZG90OiAncmVjeWNsZWRvdCdcbiAgICAgICAgbWluZ3czMjogICAgJ3Rlcm1pbmFsJ1xuICAgICAgICBtaW5ndzY0OiAgICAndGVybWluYWwnXG4gICAgICAgIG1zeXMyOiAgICAgICd0ZXJtaW5hbGRhcmsnXG4gICAgICAgIG1pbnR0eTogICAgICd0ZXJtaW5hbGRhcmsnXG4gICAgICAgIHByb2NleHA2NDogICdwcm9jZXhwJ1xuICAgICAgICBDYWxjdWxhdG9yOiAnQ2FsY3VsYXRvcidcbiAgICAgICAgIyBDYWxlbmRhcjogICAnQ2FsZW5kYXInXG4gICAgICAgIFNldHRpbmdzOiAgICdTZXR0aW5ncydcbiAgICAgICAgTWFpbDogICAgICAgJ01haWwnXG4gICAgICAgICdNaWNyb3NvZnQgU3RvcmUnOiAnTWljcm9zb2Z0IFN0b3JlJ1xuICAgICAgICAgICAgXG4gICAgYmFzZSA9IHNsYXNoLmJhc2UgZXhlUGF0aFxuICAgICAgICAgICAgICAgIFxuICAgIGlmIGljb24gPSBpY29uTWFwW2Jhc2VdXG4gICAgICAgIHRhcmdldGZpbGUgPSBzbGFzaC5yZXNvbHZlIHBuZ1BhdGggPyBiYXNlICsgJy5wbmcnXG4gICAgICAgIGZha2VpY29uID0gc2xhc2guam9pbiBfX2Rpcm5hbWUsICcuLicgJ2ljb25zJyBpY29uICsgJy5wbmcnXG4gICAgICAgIHRyeVxuICAgICAgICAgICAgZnMuY29weUZpbGVTeW5jIGZha2VpY29uLCB0YXJnZXRmaWxlXG4gICAgICAgICAgICByZXR1cm4gdHJ1ZVxuICAgICAgICBjYXRjaCBlcnJcbiAgICAgICAgICAgIGVycm9yIGVyclxuICAgIGZhbHNlXG4gICAgXG5hcHBJY29uID0gKGV4ZVBhdGgsIHBuZ1BhdGgpIC0+XG4gICAgXG4gICAgaWYgb3MucGxhdGZvcm0oKSA9PSAnd2luMzInXG4gICAgICAgIGlmIG5vdCBmYWtlSWNvbihleGVQYXRoLCBwbmdQYXRoKVxuICAgICAgICAgICAgd3h3ICdpY29uJyBleGVQYXRoLCBwbmdQYXRoXG4gICAgZWxzZVxuICAgICAgICB3eHcgJ2ljb24nIGV4ZVBhdGgsIHBuZ1BhdGhcbiAgICAgICAgXG5tb2R1bGUuZXhwb3J0cyA9IGFwcEljb25cbiJdfQ==
-//# sourceURL=../coffee/icon.coffee
+    else
+    {
+        return wxw('icon',exePath,pngPath)
+    }
+}
+module.exports = appIcon

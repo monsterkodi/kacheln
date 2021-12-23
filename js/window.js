@@ -1,81 +1,65 @@
-// koffee 1.14.0
+// monsterkodi/kode 0.199.0
 
-/*
-000   000  000  000   000  0000000     0000000   000   000  
-000 0 000  000  0000  000  000   000  000   000  000 0 000  
-000000000  000  000 0 000  000   000  000   000  000000000  
-000   000  000  000  0000  000   000  000   000  000   000  
-00     00  000  000   000  0000000     0000000   00     00
- */
-var $, drag, dragBounds, post, ref, valid, w, win, winDrag;
+var _k_ = {empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, valid: undefined}
 
-ref = require('kxk'), $ = ref.$, drag = ref.drag, post = ref.post, valid = ref.valid, win = ref.win;
+var $, drag, dragBounds, kxk, post, w, win, winDrag
 
-w = new win({
-    dir: __dirname,
-    pkg: require('../package.json'),
-    icon: '../img/menu@2x.png',
-    prefsSeperator: '▸'
-});
+kxk = require('kxk')
+$ = kxk.$
+drag = kxk.drag
+post = kxk.post
+win = kxk.win
 
-dragBounds = null;
+w = new win({dir:__dirname,pkg:require('../package.json'),icon:'../img/menu@2x.png',prefsSeperator:'▸'})
+dragBounds = null
+winDrag = null
 
-winDrag = null;
+window.onload = function ()
+{
+    var Appl, Battery, Clock, Cores, data, Data, Dish, Konrad, Volume
 
-window.onload = function() {
-    var Appl, Battery, Clock, Cores, Data, Dish, Konrad, Volume, data;
-    post.setMaxListeners(30);
-    Appl = require('./appl');
-    Data = require('./data');
-    Clock = require('./clock');
-    Dish = require('./sysdish');
-    Konrad = require('./konrad');
-    Battery = require('./battery');
-    Cores = require('./cores');
-    Volume = require('./volume');
-    new Clock;
-    new Dish;
-    new Konrad('/Applications/konrad.app');
-    new Battery();
-    new Volume();
-    new Cores();
-    new Appl('/Applications/clippo.app');
-    new Appl('/Applications/ko.app');
-    new Appl('/Applications/kalk.app');
-    new Appl('/Applications/iTerm2.app');
-    new Appl('/Applications/klog.app');
-    new Appl('/Applications/knot.app');
-    new Appl('/Applications/password-turtle.app');
-    new Appl('/Applications/Firefox.app');
-    new Appl('/Applications/keks.app');
-    new Appl('/Applications/koin.app');
-    new Appl('/System/Applications/Mail.app');
-    new Appl('/System/Applications/Calendar.app');
-    new Appl('/System/Applications/Utilities/Activity Monitor.app');
-    data = new Data;
-    data.start();
-    return winDrag = new drag({
-        target: document.body,
-        handle: $('#main'),
-        stopEvent: false,
-        onStart: function(drag, event) {
-            if (valid(event.target.classList)) {
-                return 'skip';
-            }
-            return dragBounds = window.win.getBounds();
-        },
-        onMove: function(drag) {
-            if (dragBounds) {
-                return window.win.setBounds({
-                    x: dragBounds.x + drag.deltaSum.x,
-                    y: dragBounds.y + drag.deltaSum.y,
-                    width: dragBounds.width,
-                    height: dragBounds.height
-                });
-            }
+    post.setMaxListeners(30)
+    Appl = require('./appl')
+    Data = require('./data')
+    Clock = require('./clock')
+    Dish = require('./sysdish')
+    Konrad = require('./konrad')
+    Battery = require('./battery')
+    Cores = require('./cores')
+    Volume = require('./volume')
+    new Clock
+    new Dish
+    new Konrad('/Applications/konrad.app')
+    new Battery()
+    new Volume()
+    new Cores()
+    new Appl('/Applications/clippo.app')
+    new Appl('/Applications/ko.app')
+    new Appl('/Applications/kalk.app')
+    new Appl('/Applications/iTerm2.app')
+    new Appl('/Applications/klog.app')
+    new Appl('/Applications/knot.app')
+    new Appl('/Applications/password-turtle.app')
+    new Appl('/Applications/Firefox.app')
+    new Appl('/Applications/keks.app')
+    new Appl('/Applications/koin.app')
+    new Appl('/System/Applications/Mail.app')
+    new Appl('/System/Applications/Calendar.app')
+    new Appl('/System/Applications/Utilities/Activity Monitor.app')
+    data = new Data
+    data.start()
+    return winDrag = new drag({target:document.body,handle:$('#main'),stopEvent:false,onStart:function (drag, event)
+    {
+        if (!_k_.empty(event.target.classList))
+        {
+            return 'skip'
         }
-    });
-};
-
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoid2luZG93LmpzIiwic291cmNlUm9vdCI6Ii4uL2NvZmZlZSIsInNvdXJjZXMiOlsid2luZG93LmNvZmZlZSJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOztBQUFBOzs7Ozs7O0FBQUEsSUFBQTs7QUFRQSxNQUFnQyxPQUFBLENBQVEsS0FBUixDQUFoQyxFQUFFLFNBQUYsRUFBSyxlQUFMLEVBQVcsZUFBWCxFQUFpQixpQkFBakIsRUFBd0I7O0FBRXhCLENBQUEsR0FBSSxJQUFJLEdBQUosQ0FDQTtJQUFBLEdBQUEsRUFBUSxTQUFSO0lBQ0EsR0FBQSxFQUFRLE9BQUEsQ0FBUSxpQkFBUixDQURSO0lBRUEsSUFBQSxFQUFRLG9CQUZSO0lBR0EsY0FBQSxFQUFnQixHQUhoQjtDQURBOztBQVlKLFVBQUEsR0FBYTs7QUFDYixPQUFBLEdBQVU7O0FBRVYsTUFBTSxDQUFDLE1BQVAsR0FBZ0IsU0FBQTtBQUVaLFFBQUE7SUFBQSxJQUFJLENBQUMsZUFBTCxDQUFxQixFQUFyQjtJQUVBLElBQUEsR0FBTyxPQUFBLENBQVEsUUFBUjtJQUNQLElBQUEsR0FBTyxPQUFBLENBQVEsUUFBUjtJQUNQLEtBQUEsR0FBUSxPQUFBLENBQVEsU0FBUjtJQUNSLElBQUEsR0FBTyxPQUFBLENBQVEsV0FBUjtJQUNQLE1BQUEsR0FBUyxPQUFBLENBQVEsVUFBUjtJQUNULE9BQUEsR0FBVSxPQUFBLENBQVEsV0FBUjtJQUNWLEtBQUEsR0FBUSxPQUFBLENBQVEsU0FBUjtJQUNSLE1BQUEsR0FBUyxPQUFBLENBQVEsVUFBUjtJQUVULElBQUk7SUFDSixJQUFJO0lBQ0osSUFBSSxNQUFKLENBQVcsMEJBQVg7SUFDQSxJQUFJLE9BQUosQ0FBQTtJQUNBLElBQUksTUFBSixDQUFBO0lBQ0EsSUFBSSxLQUFKLENBQUE7SUFFQSxJQUFJLElBQUosQ0FBUywwQkFBVDtJQUNBLElBQUksSUFBSixDQUFTLHNCQUFUO0lBQ0EsSUFBSSxJQUFKLENBQVMsd0JBQVQ7SUFDQSxJQUFJLElBQUosQ0FBUywwQkFBVDtJQUNBLElBQUksSUFBSixDQUFTLHdCQUFUO0lBQ0EsSUFBSSxJQUFKLENBQVMsd0JBQVQ7SUFDQSxJQUFJLElBQUosQ0FBUyxtQ0FBVDtJQUNBLElBQUksSUFBSixDQUFTLDJCQUFUO0lBQ0EsSUFBSSxJQUFKLENBQVMsd0JBQVQ7SUFDQSxJQUFJLElBQUosQ0FBUyx3QkFBVDtJQUNBLElBQUksSUFBSixDQUFTLCtCQUFUO0lBQ0EsSUFBSSxJQUFKLENBQVMsbUNBQVQ7SUFDQSxJQUFJLElBQUosQ0FBUyxxREFBVDtJQUlBLElBQUEsR0FBTyxJQUFJO0lBQ1gsSUFBSSxDQUFDLEtBQUwsQ0FBQTtXQVFBLE9BQUEsR0FBVSxJQUFJLElBQUosQ0FDTjtRQUFBLE1BQUEsRUFBWSxRQUFRLENBQUMsSUFBckI7UUFDQSxNQUFBLEVBQVksQ0FBQSxDQUFFLE9BQUYsQ0FEWjtRQUVBLFNBQUEsRUFBWSxLQUZaO1FBR0EsT0FBQSxFQUFZLFNBQUMsSUFBRCxFQUFPLEtBQVA7WUFDUixJQUFHLEtBQUEsQ0FBTSxLQUFLLENBQUMsTUFBTSxDQUFDLFNBQW5CLENBQUg7QUFDSSx1QkFBTyxPQURYOzttQkFFQSxVQUFBLEdBQWEsTUFBTSxDQUFDLEdBQUcsQ0FBQyxTQUFYLENBQUE7UUFITCxDQUhaO1FBT0EsTUFBQSxFQUFZLFNBQUMsSUFBRDtZQUNSLElBQUcsVUFBSDt1QkFDSSxNQUFNLENBQUMsR0FBRyxDQUFDLFNBQVgsQ0FDSTtvQkFBQSxDQUFBLEVBQVEsVUFBVSxDQUFDLENBQVgsR0FBZSxJQUFJLENBQUMsUUFBUSxDQUFDLENBQXJDO29CQUNBLENBQUEsRUFBUSxVQUFVLENBQUMsQ0FBWCxHQUFlLElBQUksQ0FBQyxRQUFRLENBQUMsQ0FEckM7b0JBRUEsS0FBQSxFQUFRLFVBQVUsQ0FBQyxLQUZuQjtvQkFHQSxNQUFBLEVBQVEsVUFBVSxDQUFDLE1BSG5CO2lCQURKLEVBREo7O1FBRFEsQ0FQWjtLQURNO0FBN0NFIiwic291cmNlc0NvbnRlbnQiOlsiIyMjXG4wMDAgICAwMDAgIDAwMCAgMDAwICAgMDAwICAwMDAwMDAwICAgICAwMDAwMDAwICAgMDAwICAgMDAwICBcbjAwMCAwIDAwMCAgMDAwICAwMDAwICAwMDAgIDAwMCAgIDAwMCAgMDAwICAgMDAwICAwMDAgMCAwMDAgIFxuMDAwMDAwMDAwICAwMDAgIDAwMCAwIDAwMCAgMDAwICAgMDAwICAwMDAgICAwMDAgIDAwMDAwMDAwMCAgXG4wMDAgICAwMDAgIDAwMCAgMDAwICAwMDAwICAwMDAgICAwMDAgIDAwMCAgIDAwMCAgMDAwICAgMDAwICBcbjAwICAgICAwMCAgMDAwICAwMDAgICAwMDAgIDAwMDAwMDAgICAgIDAwMDAwMDAgICAwMCAgICAgMDAgIFxuIyMjXG5cbnsgJCwgZHJhZywgcG9zdCwgdmFsaWQsIHdpbiB9ID0gcmVxdWlyZSAna3hrJ1xuXG53ID0gbmV3IHdpblxuICAgIGRpcjogICAgX19kaXJuYW1lXG4gICAgcGtnOiAgICByZXF1aXJlICcuLi9wYWNrYWdlLmpzb24nXG4gICAgaWNvbjogICAnLi4vaW1nL21lbnVAMngucG5nJ1xuICAgIHByZWZzU2VwZXJhdG9yOiAn4pa4J1xuXG4jICAwMDAwMDAwICAgMDAwICAgMDAwICAwMDAgICAgICAgMDAwMDAwMCAgICAwMDAwMDAwICAgMDAwMDAwMFxuIyAwMDAgICAwMDAgIDAwMDAgIDAwMCAgMDAwICAgICAgMDAwICAgMDAwICAwMDAgICAwMDAgIDAwMCAgIDAwMFxuIyAwMDAgICAwMDAgIDAwMCAwIDAwMCAgMDAwICAgICAgMDAwICAgMDAwICAwMDAwMDAwMDAgIDAwMCAgIDAwMFxuIyAwMDAgICAwMDAgIDAwMCAgMDAwMCAgMDAwICAgICAgMDAwICAgMDAwICAwMDAgICAwMDAgIDAwMCAgIDAwMFxuIyAgMDAwMDAwMCAgIDAwMCAgIDAwMCAgMDAwMDAwMCAgIDAwMDAwMDAgICAwMDAgICAwMDAgIDAwMDAwMDBcblxuZHJhZ0JvdW5kcyA9IG51bGxcbndpbkRyYWcgPSBudWxsXG5cbndpbmRvdy5vbmxvYWQgPSAtPlxuXG4gICAgcG9zdC5zZXRNYXhMaXN0ZW5lcnMgMzBcbiAgICBcbiAgICBBcHBsID0gcmVxdWlyZSAnLi9hcHBsJ1xuICAgIERhdGEgPSByZXF1aXJlICcuL2RhdGEnXG4gICAgQ2xvY2sgPSByZXF1aXJlICcuL2Nsb2NrJ1xuICAgIERpc2ggPSByZXF1aXJlICcuL3N5c2Rpc2gnXG4gICAgS29ucmFkID0gcmVxdWlyZSAnLi9rb25yYWQnXG4gICAgQmF0dGVyeSA9IHJlcXVpcmUgJy4vYmF0dGVyeSdcbiAgICBDb3JlcyA9IHJlcXVpcmUgJy4vY29yZXMnXG4gICAgVm9sdW1lID0gcmVxdWlyZSAnLi92b2x1bWUnXG4gICAgXG4gICAgbmV3IENsb2NrXG4gICAgbmV3IERpc2hcbiAgICBuZXcgS29ucmFkICcvQXBwbGljYXRpb25zL2tvbnJhZC5hcHAnXG4gICAgbmV3IEJhdHRlcnkoKVxuICAgIG5ldyBWb2x1bWUoKVxuICAgIG5ldyBDb3JlcygpXG4gICAgXG4gICAgbmV3IEFwcGwgJy9BcHBsaWNhdGlvbnMvY2xpcHBvLmFwcCdcbiAgICBuZXcgQXBwbCAnL0FwcGxpY2F0aW9ucy9rby5hcHAnXG4gICAgbmV3IEFwcGwgJy9BcHBsaWNhdGlvbnMva2Fsay5hcHAnXG4gICAgbmV3IEFwcGwgJy9BcHBsaWNhdGlvbnMvaVRlcm0yLmFwcCdcbiAgICBuZXcgQXBwbCAnL0FwcGxpY2F0aW9ucy9rbG9nLmFwcCdcbiAgICBuZXcgQXBwbCAnL0FwcGxpY2F0aW9ucy9rbm90LmFwcCdcbiAgICBuZXcgQXBwbCAnL0FwcGxpY2F0aW9ucy9wYXNzd29yZC10dXJ0bGUuYXBwJ1xuICAgIG5ldyBBcHBsICcvQXBwbGljYXRpb25zL0ZpcmVmb3guYXBwJ1xuICAgIG5ldyBBcHBsICcvQXBwbGljYXRpb25zL2tla3MuYXBwJ1xuICAgIG5ldyBBcHBsICcvQXBwbGljYXRpb25zL2tvaW4uYXBwJ1xuICAgIG5ldyBBcHBsICcvU3lzdGVtL0FwcGxpY2F0aW9ucy9NYWlsLmFwcCdcbiAgICBuZXcgQXBwbCAnL1N5c3RlbS9BcHBsaWNhdGlvbnMvQ2FsZW5kYXIuYXBwJ1xuICAgIG5ldyBBcHBsICcvU3lzdGVtL0FwcGxpY2F0aW9ucy9VdGlsaXRpZXMvQWN0aXZpdHkgTW9uaXRvci5hcHAnXG4gICAgICAgIFxuICAgICMgbWFpbi5vbmZvY3VzID0gLT4gJCgnI21haW4nKS5mb2N1cygpXG4gICAgXG4gICAgZGF0YSA9IG5ldyBEYXRhXG4gICAgZGF0YS5zdGFydCgpXG4gICAgXG4gICAgIyAwMDAwMDAwICAgIDAwMDAwMDAwICAgIDAwMDAwMDAgICAgMDAwMDAwMCAgIFxuICAgICMgMDAwICAgMDAwICAwMDAgICAwMDAgIDAwMCAgIDAwMCAgMDAwICAgICAgICBcbiAgICAjIDAwMCAgIDAwMCAgMDAwMDAwMCAgICAwMDAwMDAwMDAgIDAwMCAgMDAwMCAgXG4gICAgIyAwMDAgICAwMDAgIDAwMCAgIDAwMCAgMDAwICAgMDAwICAwMDAgICAwMDAgIFxuICAgICMgMDAwMDAwMCAgICAwMDAgICAwMDAgIDAwMCAgIDAwMCAgIDAwMDAwMDAgICBcbiAgICBcbiAgICB3aW5EcmFnID0gbmV3IGRyYWdcbiAgICAgICAgdGFyZ2V0OiAgICAgZG9jdW1lbnQuYm9keVxuICAgICAgICBoYW5kbGU6ICAgICAkKCcjbWFpbicpXG4gICAgICAgIHN0b3BFdmVudDogIGZhbHNlXG4gICAgICAgIG9uU3RhcnQ6ICAgIChkcmFnLCBldmVudCkgLT4gXG4gICAgICAgICAgICBpZiB2YWxpZCBldmVudC50YXJnZXQuY2xhc3NMaXN0XG4gICAgICAgICAgICAgICAgcmV0dXJuICdza2lwJ1xuICAgICAgICAgICAgZHJhZ0JvdW5kcyA9IHdpbmRvdy53aW4uZ2V0Qm91bmRzKClcbiAgICAgICAgb25Nb3ZlOiAgICAgKGRyYWcpIC0+XG4gICAgICAgICAgICBpZiBkcmFnQm91bmRzXG4gICAgICAgICAgICAgICAgd2luZG93Lndpbi5zZXRCb3VuZHNcbiAgICAgICAgICAgICAgICAgICAgeDogICAgICBkcmFnQm91bmRzLnggKyBkcmFnLmRlbHRhU3VtLnggXG4gICAgICAgICAgICAgICAgICAgIHk6ICAgICAgZHJhZ0JvdW5kcy55ICsgZHJhZy5kZWx0YVN1bS55IFxuICAgICAgICAgICAgICAgICAgICB3aWR0aDogIGRyYWdCb3VuZHMud2lkdGggXG4gICAgICAgICAgICAgICAgICAgIGhlaWdodDogZHJhZ0JvdW5kcy5oZWlnaHRcbiAgICBcbiJdfQ==
-//# sourceURL=../coffee/window.coffee
+        return dragBounds = window.win.getBounds()
+    },onMove:function (drag)
+    {
+        if (dragBounds)
+        {
+            return window.win.setBounds({x:dragBounds.x + drag.deltaSum.x,y:dragBounds.y + drag.deltaSum.y,width:dragBounds.width,height:dragBounds.height})
+        }
+    }})
+}

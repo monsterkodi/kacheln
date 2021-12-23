@@ -1,94 +1,50 @@
-// koffee 1.14.0
+// monsterkodi/kode 0.199.0
 
-/*
-00     00  00000000  00     00  000   000  00000000  000000000
-000   000  000       000   000  0000  000  000          000   
-000000000  0000000   000000000  000 0 000  0000000      000   
-000 0 000  000       000 0 000  000  0000  000          000   
-000   000  00000000  000   000  000   000  00000000     000
- */
-var animTimer, klog, r_max, rx_max, sysinfo, tick, tx_max, w_max;
+var _k_
 
-sysinfo = require('systeminformation');
+var animTimer, klog, r_max, rx_max, sysinfo, tick, tx_max, w_max
 
-klog = require('kxk').klog;
+sysinfo = require('systeminformation')
+klog = require('kxk').klog
 
-r_max = 100;
+r_max = 100
+w_max = 100
+rx_max = 100
+tx_max = 100
 
-w_max = 100;
+tick = function ()
+{
+    return sysinfo.getDynamicData((function (d)
+    {
+        var nd, r_sec, rx_sec, tx_sec, w_sec, _48_20_, _64_20_
 
-rx_max = 100;
-
-tx_max = 100;
-
-tick = function() {
-    return sysinfo.getDynamicData((function(_this) {
-        return function(d) {
-            var nd, r_sec, ref, rx_sec, tx_sec, w_sec;
-            rx_sec = parseInt(d.networkStats[0].rx_sec);
-            tx_sec = parseInt(d.networkStats[0].tx_sec);
-            if (rx_sec) {
-                rx_max = Math.max(rx_max, rx_sec);
-            }
-            if (tx_sec) {
-                tx_max = Math.max(tx_max, tx_sec);
-            }
-            nd = {
-                mem: {
-                    used: d.mem.used,
-                    total: d.mem.total,
-                    active: d.mem.active,
-                    swap: {
-                        total: d.mem.swaptotal,
-                        used: d.mem.swapused
-                    }
-                },
-                net: {
-                    rx_fac: rx_sec / rx_max,
-                    tx_fac: tx_sec / tx_max,
-                    rx_sec: rx_sec,
-                    tx_sec: tx_sec,
-                    rx_max: rx_max,
-                    tx_max: tx_max
-                },
-                cpu: {
-                    sys: d.currentLoad.currentLoad / 100,
-                    usr: d.currentLoad.currentLoadUser / 100,
-                    cores: d.currentLoad.cpus.map(function(c) {
-                        return c.load / 100;
-                    })
-                }
-            };
-            if (d.disksIO != null) {
-                r_sec = d.disksIO.rIO_sec;
-                w_sec = d.disksIO.wIO_sec;
-                r_max = Math.max(r_max, r_sec);
-                w_max = Math.max(w_max, w_sec);
-                nd.dsk = {
-                    r_fac: r_sec / r_max,
-                    w_fac: w_sec / w_max,
-                    r_sec: r_sec,
-                    w_sec: w_sec,
-                    r_max: r_max,
-                    w_max: w_max
-                };
-            }
-            if ((ref = d.battery) != null ? ref.hasBattery : void 0) {
-                nd.battery = {
-                    loaded: d.battery.currentCapacity / d.battery.maxCapacity,
-                    percent: d.battery.percent,
-                    time: d.battery.timeRemaining,
-                    cycles: d.battery.cycleCount,
-                    charging: d.battery.isCharging,
-                    plugged: d.battery.acConnected
-                };
-            }
-            return process.send(JSON.stringify(nd));
-        };
-    })(this));
-};
-
-animTimer = setInterval(tick, 4000);
-
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoibWVtbmV0LmpzIiwic291cmNlUm9vdCI6Ii4uL2NvZmZlZSIsInNvdXJjZXMiOlsibWVtbmV0LmNvZmZlZSJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOztBQUFBOzs7Ozs7O0FBQUEsSUFBQTs7QUFRQSxPQUFBLEdBQVcsT0FBQSxDQUFRLG1CQUFSOztBQUNULE9BQVMsT0FBQSxDQUFRLEtBQVI7O0FBRVgsS0FBQSxHQUFTOztBQUNULEtBQUEsR0FBUzs7QUFFVCxNQUFBLEdBQVM7O0FBQ1QsTUFBQSxHQUFTOztBQUVULElBQUEsR0FBTyxTQUFBO1dBRUgsT0FBTyxDQUFDLGNBQVIsQ0FBdUIsQ0FBQSxTQUFBLEtBQUE7ZUFBQSxTQUFDLENBQUQ7QUFFbkIsZ0JBQUE7WUFBQSxNQUFBLEdBQVMsUUFBQSxDQUFTLENBQUMsQ0FBQyxZQUFhLENBQUEsQ0FBQSxDQUFFLENBQUMsTUFBM0I7WUFDVCxNQUFBLEdBQVMsUUFBQSxDQUFTLENBQUMsQ0FBQyxZQUFhLENBQUEsQ0FBQSxDQUFFLENBQUMsTUFBM0I7WUFFVCxJQUFvQyxNQUFwQztnQkFBQSxNQUFBLEdBQVMsSUFBSSxDQUFDLEdBQUwsQ0FBUyxNQUFULEVBQWlCLE1BQWpCLEVBQVQ7O1lBQ0EsSUFBb0MsTUFBcEM7Z0JBQUEsTUFBQSxHQUFTLElBQUksQ0FBQyxHQUFMLENBQVMsTUFBVCxFQUFpQixNQUFqQixFQUFUOztZQUVBLEVBQUEsR0FDSTtnQkFBQSxHQUFBLEVBQ0k7b0JBQUEsSUFBQSxFQUFRLENBQUMsQ0FBQyxHQUFHLENBQUMsSUFBZDtvQkFDQSxLQUFBLEVBQVEsQ0FBQyxDQUFDLEdBQUcsQ0FBQyxLQURkO29CQUVBLE1BQUEsRUFBUSxDQUFDLENBQUMsR0FBRyxDQUFDLE1BRmQ7b0JBR0EsSUFBQSxFQUNRO3dCQUFBLEtBQUEsRUFBTyxDQUFDLENBQUMsR0FBRyxDQUFDLFNBQWI7d0JBQ0EsSUFBQSxFQUFPLENBQUMsQ0FBQyxHQUFHLENBQUMsUUFEYjtxQkFKUjtpQkFESjtnQkFPQSxHQUFBLEVBQ0k7b0JBQUEsTUFBQSxFQUFRLE1BQUEsR0FBTyxNQUFmO29CQUNBLE1BQUEsRUFBUSxNQUFBLEdBQU8sTUFEZjtvQkFFQSxNQUFBLEVBQVEsTUFGUjtvQkFHQSxNQUFBLEVBQVEsTUFIUjtvQkFJQSxNQUFBLEVBQVEsTUFKUjtvQkFLQSxNQUFBLEVBQVEsTUFMUjtpQkFSSjtnQkFjQSxHQUFBLEVBQ0k7b0JBQUEsR0FBQSxFQUFPLENBQUMsQ0FBQyxXQUFXLENBQUMsV0FBZCxHQUEwQixHQUFqQztvQkFDQSxHQUFBLEVBQU8sQ0FBQyxDQUFDLFdBQVcsQ0FBQyxlQUFkLEdBQThCLEdBRHJDO29CQUVBLEtBQUEsRUFBTyxDQUFDLENBQUMsV0FBVyxDQUFDLElBQUksQ0FBQyxHQUFuQixDQUF1QixTQUFDLENBQUQ7K0JBQU8sQ0FBQyxDQUFDLElBQUYsR0FBTztvQkFBZCxDQUF2QixDQUZQO2lCQWZKOztZQW1CSixJQUFHLGlCQUFIO2dCQUVJLEtBQUEsR0FBUSxDQUFDLENBQUMsT0FBTyxDQUFDO2dCQUNsQixLQUFBLEdBQVEsQ0FBQyxDQUFDLE9BQU8sQ0FBQztnQkFFbEIsS0FBQSxHQUFRLElBQUksQ0FBQyxHQUFMLENBQVMsS0FBVCxFQUFnQixLQUFoQjtnQkFDUixLQUFBLEdBQVEsSUFBSSxDQUFDLEdBQUwsQ0FBUyxLQUFULEVBQWdCLEtBQWhCO2dCQUVSLEVBQUUsQ0FBQyxHQUFILEdBQ0k7b0JBQUEsS0FBQSxFQUFPLEtBQUEsR0FBTSxLQUFiO29CQUNBLEtBQUEsRUFBTyxLQUFBLEdBQU0sS0FEYjtvQkFFQSxLQUFBLEVBQU8sS0FGUDtvQkFHQSxLQUFBLEVBQU8sS0FIUDtvQkFJQSxLQUFBLEVBQU8sS0FKUDtvQkFLQSxLQUFBLEVBQU8sS0FMUDtrQkFUUjs7WUFnQkEsbUNBQVksQ0FBRSxtQkFBZDtnQkFFSSxFQUFFLENBQUMsT0FBSCxHQUNJO29CQUFBLE1BQUEsRUFBVSxDQUFDLENBQUMsT0FBTyxDQUFDLGVBQVYsR0FBMEIsQ0FBQyxDQUFDLE9BQU8sQ0FBQyxXQUE5QztvQkFDQSxPQUFBLEVBQVUsQ0FBQyxDQUFDLE9BQU8sQ0FBQyxPQURwQjtvQkFFQSxJQUFBLEVBQVUsQ0FBQyxDQUFDLE9BQU8sQ0FBQyxhQUZwQjtvQkFHQSxNQUFBLEVBQVUsQ0FBQyxDQUFDLE9BQU8sQ0FBQyxVQUhwQjtvQkFJQSxRQUFBLEVBQVUsQ0FBQyxDQUFDLE9BQU8sQ0FBQyxVQUpwQjtvQkFLQSxPQUFBLEVBQVUsQ0FBQyxDQUFDLE9BQU8sQ0FBQyxXQUxwQjtrQkFIUjs7bUJBWUEsT0FBTyxDQUFDLElBQVIsQ0FBYSxJQUFJLENBQUMsU0FBTCxDQUFlLEVBQWYsQ0FBYjtRQXhEbUI7SUFBQSxDQUFBLENBQUEsQ0FBQSxJQUFBLENBQXZCO0FBRkc7O0FBNERQLFNBQUEsR0FBWSxXQUFBLENBQVksSUFBWixFQUFrQixJQUFsQiIsInNvdXJjZXNDb250ZW50IjpbIiMjI1xuMDAgICAgIDAwICAwMDAwMDAwMCAgMDAgICAgIDAwICAwMDAgICAwMDAgIDAwMDAwMDAwICAwMDAwMDAwMDBcbjAwMCAgIDAwMCAgMDAwICAgICAgIDAwMCAgIDAwMCAgMDAwMCAgMDAwICAwMDAgICAgICAgICAgMDAwICAgXG4wMDAwMDAwMDAgIDAwMDAwMDAgICAwMDAwMDAwMDAgIDAwMCAwIDAwMCAgMDAwMDAwMCAgICAgIDAwMCAgIFxuMDAwIDAgMDAwICAwMDAgICAgICAgMDAwIDAgMDAwICAwMDAgIDAwMDAgIDAwMCAgICAgICAgICAwMDAgICBcbjAwMCAgIDAwMCAgMDAwMDAwMDAgIDAwMCAgIDAwMCAgMDAwICAgMDAwICAwMDAwMDAwMCAgICAgMDAwICAgXG4jIyNcblxuc3lzaW5mbyAgPSByZXF1aXJlICdzeXN0ZW1pbmZvcm1hdGlvbidcbnsga2xvZyB9ID0gcmVxdWlyZSAna3hrJ1xuXG5yX21heCAgPSAxMDBcbndfbWF4ICA9IDEwMFxuXG5yeF9tYXggPSAxMDBcbnR4X21heCA9IDEwMFxuXG50aWNrID0gLT5cbiAgICBcbiAgICBzeXNpbmZvLmdldER5bmFtaWNEYXRhIChkKSA9PlxuICAgICAgICAgICAgXG4gICAgICAgIHJ4X3NlYyA9IHBhcnNlSW50IGQubmV0d29ya1N0YXRzWzBdLnJ4X3NlY1xuICAgICAgICB0eF9zZWMgPSBwYXJzZUludCBkLm5ldHdvcmtTdGF0c1swXS50eF9zZWNcbiAgICAgICAgXG4gICAgICAgIHJ4X21heCA9IE1hdGgubWF4IHJ4X21heCwgcnhfc2VjIGlmIHJ4X3NlY1xuICAgICAgICB0eF9tYXggPSBNYXRoLm1heCB0eF9tYXgsIHR4X3NlYyBpZiB0eF9zZWNcbiAgICAgICAgXG4gICAgICAgIG5kID1cbiAgICAgICAgICAgIG1lbTogXG4gICAgICAgICAgICAgICAgdXNlZDogICBkLm1lbS51c2VkXG4gICAgICAgICAgICAgICAgdG90YWw6ICBkLm1lbS50b3RhbFxuICAgICAgICAgICAgICAgIGFjdGl2ZTogZC5tZW0uYWN0aXZlXG4gICAgICAgICAgICAgICAgc3dhcDogICBcbiAgICAgICAgICAgICAgICAgICAgICAgIHRvdGFsOiBkLm1lbS5zd2FwdG90YWxcbiAgICAgICAgICAgICAgICAgICAgICAgIHVzZWQ6ICBkLm1lbS5zd2FwdXNlZFxuICAgICAgICAgICAgbmV0OlxuICAgICAgICAgICAgICAgIHJ4X2ZhYzogcnhfc2VjL3J4X21heFxuICAgICAgICAgICAgICAgIHR4X2ZhYzogdHhfc2VjL3R4X21heFxuICAgICAgICAgICAgICAgIHJ4X3NlYzogcnhfc2VjXG4gICAgICAgICAgICAgICAgdHhfc2VjOiB0eF9zZWNcbiAgICAgICAgICAgICAgICByeF9tYXg6IHJ4X21heFxuICAgICAgICAgICAgICAgIHR4X21heDogdHhfbWF4XG4gICAgICAgICAgICBjcHU6XG4gICAgICAgICAgICAgICAgc3lzOiAgIGQuY3VycmVudExvYWQuY3VycmVudExvYWQvMTAwIFxuICAgICAgICAgICAgICAgIHVzcjogICBkLmN1cnJlbnRMb2FkLmN1cnJlbnRMb2FkVXNlci8xMDBcbiAgICAgICAgICAgICAgICBjb3JlczogZC5jdXJyZW50TG9hZC5jcHVzLm1hcCAoYykgLT4gYy5sb2FkLzEwMFxuICAgICAgICAgXG4gICAgICAgIGlmIGQuZGlza3NJTz9cbiAgICAgICAgICAgIFxuICAgICAgICAgICAgcl9zZWMgPSBkLmRpc2tzSU8ucklPX3NlY1xuICAgICAgICAgICAgd19zZWMgPSBkLmRpc2tzSU8ud0lPX3NlY1xuICAgICAgICAgICAgXG4gICAgICAgICAgICByX21heCA9IE1hdGgubWF4IHJfbWF4LCByX3NlY1xuICAgICAgICAgICAgd19tYXggPSBNYXRoLm1heCB3X21heCwgd19zZWNcbiAgICAgICAgICAgIFxuICAgICAgICAgICAgbmQuZHNrID0gXG4gICAgICAgICAgICAgICAgcl9mYWM6IHJfc2VjL3JfbWF4XG4gICAgICAgICAgICAgICAgd19mYWM6IHdfc2VjL3dfbWF4XG4gICAgICAgICAgICAgICAgcl9zZWM6IHJfc2VjXG4gICAgICAgICAgICAgICAgd19zZWM6IHdfc2VjXG4gICAgICAgICAgICAgICAgcl9tYXg6IHJfbWF4XG4gICAgICAgICAgICAgICAgd19tYXg6IHdfbWF4XG5cbiAgICAgICAgaWYgZC5iYXR0ZXJ5Py5oYXNCYXR0ZXJ5XG5cbiAgICAgICAgICAgIG5kLmJhdHRlcnkgPSBcbiAgICAgICAgICAgICAgICBsb2FkZWQ6ICAgZC5iYXR0ZXJ5LmN1cnJlbnRDYXBhY2l0eS9kLmJhdHRlcnkubWF4Q2FwYWNpdHlcbiAgICAgICAgICAgICAgICBwZXJjZW50OiAgZC5iYXR0ZXJ5LnBlcmNlbnRcbiAgICAgICAgICAgICAgICB0aW1lOiAgICAgZC5iYXR0ZXJ5LnRpbWVSZW1haW5pbmdcbiAgICAgICAgICAgICAgICBjeWNsZXM6ICAgZC5iYXR0ZXJ5LmN5Y2xlQ291bnRcbiAgICAgICAgICAgICAgICBjaGFyZ2luZzogZC5iYXR0ZXJ5LmlzQ2hhcmdpbmdcbiAgICAgICAgICAgICAgICBwbHVnZ2VkOiAgZC5iYXR0ZXJ5LmFjQ29ubmVjdGVkXG4gICAgICAgICAgICAgICAgXG4gICAgICAgICMgbG9nICd0aWNrJyBuZC5jcHUuc3lzXG4gICAgICAgICAgICAgICAgXG4gICAgICAgIHByb2Nlc3Muc2VuZCBKU09OLnN0cmluZ2lmeSBuZFxuXG5hbmltVGltZXIgPSBzZXRJbnRlcnZhbCB0aWNrLCA0MDAwXG4iXX0=
-//# sourceURL=../coffee/memnet.coffee
+        rx_sec = parseInt(d.networkStats[0].rx_sec)
+        tx_sec = parseInt(d.networkStats[0].tx_sec)
+        if (rx_sec)
+        {
+            rx_max = Math.max(rx_max,rx_sec)
+        }
+        if (tx_sec)
+        {
+            tx_max = Math.max(tx_max,tx_sec)
+        }
+        nd = {mem:{used:d.mem.used,total:d.mem.total,active:d.mem.active,swap:{total:d.mem.swaptotal,used:d.mem.swapused}},net:{rx_fac:rx_sec / rx_max,tx_fac:tx_sec / tx_max,rx_sec:rx_sec,tx_sec:tx_sec,rx_max:rx_max,tx_max:tx_max},cpu:{sys:d.currentLoad.currentLoad / 100,usr:d.currentLoad.currentLoadUser / 100,cores:d.currentLoad.cpus.map(function (c)
+        {
+            return c.load / 100
+        })}}
+        if ((d.disksIO != null))
+        {
+            r_sec = d.disksIO.rIO_sec
+            w_sec = d.disksIO.wIO_sec
+            r_max = Math.max(r_max,r_sec)
+            w_max = Math.max(w_max,w_sec)
+            nd.dsk = {r_fac:r_sec / r_max,w_fac:w_sec / w_max,r_sec:r_sec,w_sec:w_sec,r_max:r_max,w_max:w_max}
+        }
+        if ((d.battery != null ? d.battery.hasBattery : undefined))
+        {
+            nd.battery = {loaded:d.battery.currentCapacity / d.battery.maxCapacity,percent:d.battery.percent,time:d.battery.timeRemaining,cycles:d.battery.cycleCount,charging:d.battery.isCharging,plugged:d.battery.acConnected}
+        }
+        return process.send(JSON.stringify(nd))
+    }).bind(this))
+}
+animTimer = setInterval(tick,4000)

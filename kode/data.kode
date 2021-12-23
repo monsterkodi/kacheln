@@ -11,7 +11,7 @@
 electron = require 'electron'
 wxw      = require 'wxw'
 
-class Data
+function Data
 
     @: ->
         
@@ -70,7 +70,7 @@ class Data
 # 000       000      000   000  000       000  000   
 #  0000000  0000000   0000000    0000000  000   000  
 
-class Clock
+function Clock
         
     @: (@name='clock' @tick='slow') -> 
         
@@ -93,7 +93,7 @@ class Clock
 #      000     000          000  000  000  0000  000       000   000  
 # 0000000      000     0000000   000  000   000  000        0000000   
 
-class Sysinfo
+function Sysinfo
         
     @: (@name='sysinfo') ->
         
@@ -112,7 +112,7 @@ class Sysinfo
 # 000 0 000  000   000  000   000       000  000       
 # 000   000   0000000    0000000   0000000   00000000  
 
-class Mouse
+function Mouse
     
     @: (@name='mouse') ->
                 
@@ -150,7 +150,7 @@ class Mouse
 # 000   000  000        000             000  
 # 000   000  000        000        0000000   
 
-class Apps
+function Apps
     
     @: (@name='apps') ->
         
@@ -180,7 +180,7 @@ class Apps
 # 000   000  000  000  0000       000  
 # 00     00  000  000   000  0000000   
 
-class Wins
+function Wins
     
     @: (@name='wins' @tick='slow') ->
         

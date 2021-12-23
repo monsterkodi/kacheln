@@ -6,16 +6,22 @@
 000   000  000        000        0000000  
 ###
 
-{ $, app, childp, elem, empty, klog, kstr, os, post, slash, valid } = require 'kxk'
+log '1'
+kxk = require 'kxk'
+log '2'
+{ $, app, childp, elem, klog, kstr, os, post, slash } = kxk
 
+log '3'
 Kachel  = require './kachel'
 appIcon = require './icon'
 utils   = require './utils'
+log '4'
 
-class Appl extends Kachel
+function Appl extends Kachel
         
     @: (@kachelId='appl') ->
 
+        log '5'
         post.on 'app' @onApp
         post.on 'win' @onWin
         
@@ -70,7 +76,7 @@ class Appl extends Kachel
         dot =$ '.appldot' @div
         
         if @activated and not dot
-            dot  = utils.svg width:16 height:16 clss:'appldot'
+            dot  = utils.svg 16 16 'appldot'
             grp  = utils.append dot, 'g'
             crc  = utils.append grp, 'circle' cx:0 cy:0 r:7 class:'applcircle'
             @div.appendChild dot
@@ -154,7 +160,7 @@ class Appl extends Kachel
     setIcon: (iconPath) =>
         
         return if not iconPath
-        super
+        super iconPath
         @updateDot()
                            
 module.exports = Appl

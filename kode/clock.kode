@@ -11,7 +11,7 @@
 Kachel  = require './kachel'
 utils   = require './utils'
 
-class Clock extends Kachel
+function Clock extends Kachel
         
     @: (@kachelId='clock') -> 
 
@@ -36,10 +36,10 @@ class Clock extends Kachel
     
     onLoad: ->
         
-        svg = utils.svg clss:'clock'
+        svg = utils.svg 100 100 'clock'
         @div.appendChild svg
         
-        face = utils.circle radius:45 clss:'face' svg:svg
+        face = utils.circle 45 0 0 'face' svg
         
         @hour   = utils.append svg, 'line' y1:0 y2:-32 class:'hour' 
         @minute = utils.append svg, 'line' y1:0 y2:-42 class:'minute'

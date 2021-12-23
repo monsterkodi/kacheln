@@ -1,134 +1,154 @@
-// koffee 1.14.0
+// monsterkodi/kode 0.199.0
 
-/*
-00     00   0000000   000   000  00000000  000   000  000  000   000
-000   000  000   000  000   000  000       000 0 000  000  0000  000
-000000000  000   000   000 000   0000000   000000000  000  000 0 000
-000 0 000  000   000     000     000       000   000  000  000  0000
-000   000   0000000       0      00000000  00     00  000  000   000
- */
-var klog, moveWin, os, ref, slash, wxw;
+var _k_ = {in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}}
 
-ref = require('kxk'), klog = ref.klog, os = ref.os, slash = ref.slash;
+var klog, moveWin, os, slash, wxw
 
-wxw = require('wxw');
+klog = require('kxk').klog
+os = require('kxk').os
+slash = require('kxk').slash
 
-moveWin = function(dir) {
-    var ar, b, base, d, h, info, infos, ko, ref1, sb, screen, sl, sr, st, w, wr, x, y;
-    screen = wxw('screen', 'user');
-    klog("moveWin " + dir, screen);
-    ar = {
-        w: screen.width,
-        h: screen.height
-    };
-    if (os.platform() === 'win32') {
-        infos = wxw('info', 'top');
-    } else {
-        infos = wxw('info', 'top').filter(function(i) {
-            return i.index >= 0;
-        });
-        infos.sort(function(a, b) {
-            return a.index - b.index;
-        });
+wxw = require('wxw')
+
+moveWin = function (dir)
+{
+    var ar, b, base, d, h, info, infos, ko, sb, screen, sl, sr, st, w, wr, x, y
+
+    screen = wxw('screen','user')
+    klog(`moveWin ${dir}`,screen)
+    ar = {w:screen.width,h:screen.height}
+    if (os.platform() === 'win32')
+    {
+        infos = wxw('info','top')
     }
-    if (info = infos[0]) {
-        base = slash.base(info.path);
-        if (base === 'kachel' || base === 'kacheln' || base === 'kappo') {
-            return;
-        }
-        b = 0;
-        if (os.platform() === 'win32') {
-            if (base === 'electron' || base === 'ko' || base === 'konrad' || base === 'clippo' || base === 'klog' || base === 'kaligraf' || base === 'kalk' || base === 'uniko' || base === 'knot' || base === 'space' || base === 'ruler' || base === 'keks') {
-                b = 0;
-            } else if (base === 'devenv') {
-                b = -1;
-            } else {
-                b = 10;
-            }
-        }
-        wr = {
-            x: info.x,
-            y: info.y,
-            w: info.width,
-            h: info.height
-        };
-        ko = 216;
-        d = 2 * b;
-        ref1 = (function() {
-            switch (dir) {
-                case 'left':
-                    return [-b, 0, ar.w / 2 + d, ar.h + b];
-                case 'right':
-                    return [ar.w / 2 - b, 0, ar.w / 2 + d - ko, ar.h + b];
-                case 'down':
-                    return [ar.w / 6 - b, 0, 2 / 3 * ar.w + d, ar.h + b];
-                case 'up':
-                    return [-b, 0, ar.w + d - ko, ar.h + b];
-                case 'topleft':
-                    return [-b, 0, ar.w / 2 + d, ar.h / 2];
-                case 'botleft':
-                    return [-b, ar.h / 2 - b, ar.w / 2 + d, ar.h / 2 + d];
-                case 'topright':
-                    return [ar.w / 2 - b, 0, ar.w / 2 + d - ko, ar.h / 2];
-                case 'botright':
-                    return [ar.w / 2 - b, ar.h / 2 - b, ar.w / 2 + d - ko, ar.h / 2 + d];
-                case 'top':
-                    return [ar.w / 6 - b, 0, 2 * ar.w / 3 + d, ar.h / 2];
-                case 'bot':
-                    return [ar.w / 6 - b, ar.h / 2 - b, 2 * ar.w / 3 + d, ar.h / 2 + d];
-            }
-        })(), x = ref1[0], y = ref1[1], w = ref1[2], h = ref1[3];
-        sl = 30 > Math.abs(wr.x - x);
-        sr = 30 > Math.abs(wr.x + wr.w - (x + w));
-        st = 30 > Math.abs(wr.y - y);
-        sb = 30 > Math.abs(wr.y + wr.h - (y + h));
-        if (sl && sr && st && sb) {
-            switch (dir) {
-                case 'left':
-                    w = ar.w / 3 + d;
-                    break;
-                case 'right':
-                    w = ar.w / 2 + d;
-                    break;
-                case 'down':
-                    x = ar.w / 3 - b;
-                    w = 2 / 3 * ar.w + d - ko;
-                    break;
-                case 'up':
-                    x = -b;
-                    w = ar.w + d;
-                    break;
-                case 'topleft':
-                    w = ar.w / 3 + d;
-                    break;
-                case 'botleft':
-                    w = ar.w / 3 + d;
-                    break;
-                case 'topright':
-                    x = 2 * ar.w / 3 - b;
-                    w = ar.w / 3 + d;
-                    break;
-                case 'botright':
-                    x = 2 * ar.w / 3 - b;
-                    w = ar.w / 3 + d;
-                    break;
-                case 'top':
-                    x = ar.w / 3 - b;
-                    w = ar.w / 3 + d;
-                    break;
-                case 'bot':
-                    x = ar.w / 3 - b;
-                    w = ar.w / 3 + d;
-            }
-        }
-        klog('bounds', info.id, parseInt(x), parseInt(y), parseInt(w), parseInt(h));
-        return wxw('bounds', info.id, parseInt(x), parseInt(y), parseInt(w), parseInt(h));
-    } else {
-        return klog('no info!');
+    else
+    {
+        infos = wxw('info','top').filter(function (i)
+        {
+            return i.index >= 0
+        })
+        infos.sort(function (a, b)
+        {
+            return a.index - b.index
+        })
     }
-};
+    if (info = infos[0])
+    {
+        base = slash.base(info.path)
+        if (_k_.in(base,['kachel','kacheln','kappo']))
+        {
+            return
+        }
+        b = 0
+        if (os.platform() === 'win32')
+        {
+            if (_k_.in(base,['electron','ko','konrad','clippo','klog','kaligraf','kalk','uniko','knot','space','ruler','keks']))
+            {
+                b = 0
+            }
+            else if (_k_.in(base,['devenv']))
+            {
+                b = -1
+            }
+            else
+            {
+                b = 10
+            }
+        }
+        wr = {x:info.x,y:info.y,w:info.width,h:info.height}
+        ko = 216
+        d = 2 * b
+        var _44_18_ = ((function ()
+        {
+            switch (dir)
+            {
+                case 'left':
+                    return [-b,0,ar.w / 2 + d,ar.h + b]
 
-module.exports = moveWin;
+                case 'right':
+                    return [ar.w / 2 - b,0,ar.w / 2 + d - ko,ar.h + b]
 
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoibW92ZXdpbi5qcyIsInNvdXJjZVJvb3QiOiIuLi9jb2ZmZWUiLCJzb3VyY2VzIjpbIm1vdmV3aW4uY29mZmVlIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7O0FBQUE7Ozs7Ozs7QUFBQSxJQUFBOztBQVFBLE1BQXNCLE9BQUEsQ0FBUSxLQUFSLENBQXRCLEVBQUUsZUFBRixFQUFRLFdBQVIsRUFBWTs7QUFFWixHQUFBLEdBQU0sT0FBQSxDQUFRLEtBQVI7O0FBRU4sT0FBQSxHQUFVLFNBQUMsR0FBRDtBQUVOLFFBQUE7SUFBQSxNQUFBLEdBQVMsR0FBQSxDQUFJLFFBQUosRUFBYSxNQUFiO0lBQ1QsSUFBQSxDQUFLLFVBQUEsR0FBVyxHQUFoQixFQUFzQixNQUF0QjtJQUNBLEVBQUEsR0FBSztRQUFBLENBQUEsRUFBRSxNQUFNLENBQUMsS0FBVDtRQUFnQixDQUFBLEVBQUUsTUFBTSxDQUFDLE1BQXpCOztJQUVMLElBQUcsRUFBRSxDQUFDLFFBQUgsQ0FBQSxDQUFBLEtBQWlCLE9BQXBCO1FBQ0ksS0FBQSxHQUFRLEdBQUEsQ0FBSSxNQUFKLEVBQVcsS0FBWCxFQURaO0tBQUEsTUFBQTtRQUdJLEtBQUEsR0FBUSxHQUFBLENBQUksTUFBSixFQUFXLEtBQVgsQ0FBaUIsQ0FBQyxNQUFsQixDQUF5QixTQUFDLENBQUQ7bUJBQU8sQ0FBQyxDQUFDLEtBQUYsSUFBVztRQUFsQixDQUF6QjtRQUNSLEtBQUssQ0FBQyxJQUFOLENBQVcsU0FBQyxDQUFELEVBQUcsQ0FBSDttQkFBUyxDQUFDLENBQUMsS0FBRixHQUFVLENBQUMsQ0FBQztRQUFyQixDQUFYLEVBSko7O0lBTUEsSUFBRyxJQUFBLEdBQU8sS0FBTSxDQUFBLENBQUEsQ0FBaEI7UUFFSSxJQUFBLEdBQU8sS0FBSyxDQUFDLElBQU4sQ0FBVyxJQUFJLENBQUMsSUFBaEI7UUFFUCxJQUFVLElBQUEsS0FBUyxRQUFULElBQUEsSUFBQSxLQUFrQixTQUFsQixJQUFBLElBQUEsS0FBNEIsT0FBdEM7QUFBQSxtQkFB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QUUsQ0FBQyxDQUFILEdBQUssQ0FBTCxHQUFPO0FBVnBELGFBREo7O1FBYUEsSUFBQSxDQUFLLFFBQUwsRUFBYyxJQUFJLENBQUMsRUFBbkIsRUFBdUIsUUFBQSxDQUFTLENBQVQsQ0FBdkIsRUFBb0MsUUFBQSxDQUFTLENBQVQsQ0FBcEMsRUFBaUQsUUFBQSxDQUFTLENBQVQsQ0FBakQsRUFBOEQsUUFBQSxDQUFTLENBQVQsQ0FBOUQ7ZUFDQSxHQUFBLENBQUksUUFBSixFQUFhLElBQUksQ0FBQyxFQUFsQixFQUFzQixRQUFBLENBQVMsQ0FBVCxDQUF0QixFQUFtQyxRQUFBLENBQVMsQ0FBVCxDQUFuQyxFQUFnRCxRQUFBLENBQVMsQ0FBVCxDQUFoRCxFQUE2RCxRQUFBLENBQVMsQ0FBVCxDQUE3RCxFQWxESjtLQUFBLE1BQUE7ZUFvREksSUFBQSxDQUFLLFVBQUwsRUFwREo7O0FBWk07O0FBa0VWLE1BQU0sQ0FBQyxPQUFQLEdBQWlCIiwic291cmNlc0NvbnRlbnQiOlsiIyMjXG4wMCAgICAgMDAgICAwMDAwMDAwICAgMDAwICAgMDAwICAwMDAwMDAwMCAgMDAwICAgMDAwICAwMDAgIDAwMCAgIDAwMFxuMDAwICAgMDAwICAwMDAgICAwMDAgIDAwMCAgIDAwMCAgMDAwICAgICAgIDAwMCAwIDAwMCAgMDAwICAwMDAwICAwMDBcbjAwMDAwMDAwMCAgMDAwICAgMDAwICAgMDAwIDAwMCAgIDAwMDAwMDAgICAwMDAwMDAwMDAgIDAwMCAgMDAwIDAgMDAwXG4wMDAgMCAwMDAgIDAwMCAgIDAwMCAgICAgMDAwICAgICAwMDAgICAgICAgMDAwICAgMDAwICAwMDAgIDAwMCAgMDAwMFxuMDAwICAgMDAwICAgMDAwMDAwMCAgICAgICAwICAgICAgMDAwMDAwMDAgIDAwICAgICAwMCAgMDAwICAwMDAgICAwMDBcbiMjI1xuXG57IGtsb2csIG9zLCBzbGFzaCB9ID0gcmVxdWlyZSAna3hrJ1xuXG53eHcgPSByZXF1aXJlICd3eHcnXG5cbm1vdmVXaW4gPSAoZGlyKSAtPlxuICAgIFxuICAgIHNjcmVlbiA9IHd4dyAnc2NyZWVuJyAndXNlcidcbiAgICBrbG9nIFwibW92ZVdpbiAje2Rpcn1cIiBzY3JlZW5cbiAgICBhciA9IHc6c2NyZWVuLndpZHRoLCBoOnNjcmVlbi5oZWlnaHRcbiAgICBcbiAgICBpZiBvcy5wbGF0Zm9ybSgpID09ICd3aW4zMidcbiAgICAgICAgaW5mb3MgPSB3eHcoJ2luZm8nICd0b3AnKVxuICAgIGVsc2VcbiAgICAgICAgaW5mb3MgPSB3eHcoJ2luZm8nICd0b3AnKS5maWx0ZXIgKGkpIC0+IGkuaW5kZXggPj0gMFxuICAgICAgICBpbmZvcy5zb3J0IChhLGIpIC0+IGEuaW5kZXggLSBiLmluZGV4XG4gICAgXG4gICAgaWYgaW5mbyA9IGluZm9zWzBdXG4gICAgICAgICAgICAgICAgXG4gICAgICAgIGJhc2UgPSBzbGFzaC5iYXNlIGluZm8ucGF0aFxuICAgICAgICBcbiAgICAgICAgcmV0dXJuIGlmIGJhc2UgaW4gWydrYWNoZWwnICdrYWNoZWxuJyAna2FwcG8nXVxuICAgICAgICBcbiAgICAgICAgYiA9IDBcblxuICAgICAgICBpZiBvcy5wbGF0Zm9ybSgpID09ICd3aW4zMidcbiAgICAgICAgICAgIGlmIGJhc2UgaW4gWydlbGVjdHJvbicgJ2tvJyAna29ucmFkJyAnY2xpcHBvJyAna2xvZycgJ2thbGlncmFmJyAna2FsaycgJ3VuaWtvJyAna25vdCcgJ3NwYWNlJyAncnVsZXInICdrZWtzJ11cbiAgICAgICAgICAgICAgICBiID0gMCAgIyBzYW5lIHdpbmRvdyBib3JkZXJcbiAgICAgICAgICAgIGVsc2UgaWYgYmFzZSBpbiBbJ2RldmVudiddXG4gICAgICAgICAgICAgICAgYiA9IC0xICAjIHd0Zj9cbiAgICAgICAgICAgIGVsc2VcbiAgICAgICAgICAgICAgICBiID0gMTAgIyB0cmFuc3BhcmVudCB3aW5kb3cgYm9yZGVyXG4gICAgICAgIFxuICAgICAgICB3ciA9IHg6aW5mby54LCB5OmluZm8ueSwgdzppbmZvLndpZHRoLCBoOmluZm8uaGVpZ2h0XG4gICAgICAgIGtvID0gMjE2XG4gICAgICAgIGQgPSAyKmJcbiAgICAgICAgW3gseSx3LGhdID0gc3dpdGNoIGRpclxuICAgICAgICAgICAgd2hlbiAnbGVmdCcgICAgIHRoZW4gWy1iLCAgICAgICAgIDAgICAgICAgICBhci53LzIrZCwgICAgIGFyLmgrYl1cbiAgICAgICAgICAgIHdoZW4gJ3JpZ2h0JyAgICB0aGVuIFthci53LzItYiwgICAwICAgICAgIGFyLncvMitkLWtvLCAgICBhci5oK2JdXG4gICAgICAgICAgICB3aGVuICdkb3duJyAgICAgdGhlbiBbYXIudy82LWIsICAgMCAgICAgICAgMi8zKmFyLncrZCwgICAgYXIuaCtiXVxuICAgICAgICAgICAgd2hlbiAndXAnICAgICAgIHRoZW4gWy1iLCAgICAgICAgIDAgICAgICAgICBhci53K2Qta28sICAgIGFyLmgrYl1cbiAgICAgICAgICAgIHdoZW4gJ3RvcGxlZnQnICB0aGVuIFstYiwgICAgICAgICAwICAgICAgICAgYXIudy8yK2QsICAgICBhci5oLzJdXG4gICAgICAgICAgICB3aGVuICdib3RsZWZ0JyAgdGhlbiBbLWIsICAgICAgICAgYXIuaC8yLWIsIGFyLncvMitkLCAgICAgYXIuaC8yK2RdXG4gICAgICAgICAgICB3aGVuICd0b3ByaWdodCcgdGhlbiBbYXIudy8yLWIsICAgMCAgICAgICAgIGFyLncvMitkLWtvLCAgYXIuaC8yXVxuICAgICAgICAgICAgd2hlbiAnYm90cmlnaHQnIHRoZW4gW2FyLncvMi1iLCAgIGFyLmgvMi1iLCBhci53LzIrZC1rbywgIGFyLmgvMitkXVxuICAgICAgICAgICAgd2hlbiAndG9wJyAgICAgIHRoZW4gW2FyLncvNi1iLCAgIDAgICAgICAgICAyKmFyLncvMytkLCAgIGFyLmgvMl1cbiAgICAgICAgICAgIHdoZW4gJ2JvdCcgICAgICB0aGVuIFthci53LzYtYiwgICBhci5oLzItYiwgMiphci53LzMrZCwgICBhci5oLzIrZF1cbiAgICAgICAgXG4gICAgICAgIHNsID0gMzAgPiBNYXRoLmFicyB3ci54IC0gIHhcbiAgICAgICAgc3IgPSAzMCA+IE1hdGguYWJzIHdyLngrd3IudyAtICh4K3cpXG4gICAgICAgIHN0ID0gMzAgPiBNYXRoLmFicyB3ci55IC0gIHlcbiAgICAgICAgc2IgPSAzMCA+IE1hdGguYWJzIHdyLnkrd3IuaCAtICh5K2gpXG4gICAgICAgIFxuICAgICAgICBpZiBzbCBhbmQgc3IgYW5kIHN0IGFuZCBzYlxuICAgICAgICAgICAgc3dpdGNoIGRpclxuICAgICAgICAgICAgICAgIHdoZW4gJ2xlZnQnICAgICB0aGVuICAgICAgICAgICAgICAgICB3ID0gYXIudy8zK2RcbiAgICAgICAgICAgICAgICB3aGVuICdyaWdodCcgICAgdGhlbiAgICAgICAgICAgICAgICAgdyA9IGFyLncvMitkXG4gICAgICAgICAgICAgICAgd2hlbiAnZG93bicgICAgIHRoZW4geCA9IGFyLncvMy1iOyAgIHcgPSAyLzMqYXIudytkLWtvXG4gICAgICAgICAgICAgICAgd2hlbiAndXAnICAgICAgIHRoZW4geCA9IC1iOyAgICAgICAgIHcgPSBhci53K2QgICAgIFxuICAgICAgICAgICAgICAgIHdoZW4gJ3RvcGxlZnQnICB0aGVuICAgICAgICAgICAgICAgICB3ID0gYXIudy8zK2RcbiAgICAgICAgICAgICAgICB3aGVuICdib3RsZWZ0JyAgdGhlbiAgICAgICAgICAgICAgICAgdyA9IGFyLncvMytkXG4gICAgICAgICAgICAgICAgd2hlbiAndG9wcmlnaHQnIHRoZW4geCA9IDIqYXIudy8zLWI7IHcgPSBhci53LzMrZFxuICAgICAgICAgICAgICAgIHdoZW4gJ2JvdHJpZ2h0JyB0aGVuIHggPSAyKmFyLncvMy1iOyB3ID0gYXIudy8zK2RcbiAgICAgICAgICAgICAgICB3aGVuICd0b3AnICAgICAgdGhlbiB4ID0gYXIudy8zLWI7ICAgdyA9IGFyLncvMytkXG4gICAgICAgICAgICAgICAgd2hlbiAnYm90JyAgICAgIHRoZW4geCA9IGFyLncvMy1iOyAgIHcgPSBhci53LzMrZFxuICAgICAgICBcbiAgICAgICAga2xvZyAnYm91bmRzJyBpbmZvLmlkLCBwYXJzZUludCh4KSwgcGFyc2VJbnQoeSksIHBhcnNlSW50KHcpLCBwYXJzZUludChoKVxuICAgICAgICB3eHcgJ2JvdW5kcycgaW5mby5pZCwgcGFyc2VJbnQoeCksIHBhcnNlSW50KHkpLCBwYXJzZUludCh3KSwgcGFyc2VJbnQoaClcbiAgICBlbHNlIFxuICAgICAgICBrbG9nICdubyBpbmZvISdcblxubW9kdWxlLmV4cG9ydHMgPSBtb3ZlV2luXG4iXX0=
-//# sourceURL=../coffee/movewin.coffee
+                case 'down':
+                    return [ar.w / 6 - b,0,2 / 3 * ar.w + d,ar.h + b]
+
+                case 'up':
+                    return [-b,0,ar.w + d - ko,ar.h + b]
+
+                case 'topleft':
+                    return [-b,0,ar.w / 2 + d,ar.h / 2]
+
+                case 'botleft':
+                    return [-b,ar.h / 2 - b,ar.w / 2 + d,ar.h / 2 + d]
+
+                case 'topright':
+                    return [ar.w / 2 - b,0,ar.w / 2 + d - ko,ar.h / 2]
+
+                case 'botright':
+                    return [ar.w / 2 - b,ar.h / 2 - b,ar.w / 2 + d - ko,ar.h / 2 + d]
+
+                case 'top':
+                    return [ar.w / 6 - b,0,2 * ar.w / 3 + d,ar.h / 2]
+
+                case 'bot':
+                    return [ar.w / 6 - b,ar.h / 2 - b,2 * ar.w / 3 + d,ar.h / 2 + d]
+
+            }
+
+        }).bind(this))() ; x = _44_18_[0]        ; y = _44_18_[1]        ; w = _44_18_[2]        ; h = _44_18_[3]
+
+        sl = 30 > Math.abs(wr.x - x)
+        sr = 30 > Math.abs(wr.x + wr.w - (x + w))
+        st = 30 > Math.abs(wr.y - y)
+        sb = 30 > Math.abs(wr.y + wr.h - (y + h))
+        if (sl && sr && st && sb)
+        {
+            switch (dir)
+            {
+                case 'left':
+                    w = ar.w / 3 + d
+                    break
+                case 'right':
+                    w = ar.w / 2 + d
+                    break
+                case 'down':
+                    x = ar.w / 3 - b
+                    w = 2 / 3 * ar.w + d - ko
+                    break
+                case 'up':
+                    x = -b
+                    w = ar.w + d
+                    break
+                case 'topleft':
+                    w = ar.w / 3 + d
+                    break
+                case 'botleft':
+                    w = ar.w / 3 + d
+                    break
+                case 'topright':
+                    x = 2 * ar.w / 3 - b
+                    w = ar.w / 3 + d
+                    break
+                case 'botright':
+                    x = 2 * ar.w / 3 - b
+                    w = ar.w / 3 + d
+                    break
+                case 'top':
+                    x = ar.w / 3 - b
+                    w = ar.w / 3 + d
+                    break
+                case 'bot':
+                    x = ar.w / 3 - b
+                    w = ar.w / 3 + d
+                    break
+            }
+
+        }
+        klog('bounds',info.id,parseInt(x),parseInt(y),parseInt(w),parseInt(h))
+        return wxw('bounds',info.id,parseInt(x),parseInt(y),parseInt(w),parseInt(h))
+    }
+    else
+    {
+        return klog('no info!')
+    }
+}
+module.exports = moveWin

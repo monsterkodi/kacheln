@@ -1,207 +1,154 @@
-// koffee 1.14.0
+// monsterkodi/kode 0.199.0
 
-/*
- 0000000  000   000   0000000  0000000    000   0000000  000   000  
-000        000 000   000       000   000  000  000       000   000  
-0000000     00000    0000000   000   000  000  0000000   000000000  
-     000     000          000  000   000  000       000  000   000  
-0000000      000     0000000   0000000    000  0000000   000   000
- */
-var Kachel, Sysdish, clamp, deg2rad, post, ref, utils,
-    bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    hasProp = {}.hasOwnProperty;
+var _k_ = {extend: function (c,p) {for (var k in p) { if (Object.hasOwn(p, k)) c[k] = p[k] } function ctor() { this.constructor = c; } ctor.prototype = p.prototype; c.prototype = new ctor(); c.__super__ = p.prototype; return c;}}
 
-ref = require('kxk'), clamp = ref.clamp, deg2rad = ref.deg2rad, post = ref.post;
+var clamp, deg2rad, Kachel, post, Sysdish, utils
 
-utils = require('./utils');
+clamp = require('kxk').clamp
+deg2rad = require('kxk').deg2rad
+post = require('kxk').post
 
-Kachel = require('./kachel');
+utils = require('./utils')
+Kachel = require('./kachel')
 
-Sysdish = (function(superClass) {
-    extend(Sysdish, superClass);
-
-    function Sysdish(kachelId) {
-        this.kachelId = kachelId != null ? kachelId : 'sysdish';
-        this.animDish = bind(this.animDish, this);
-        this.onData = bind(this.onData, this);
-        Sysdish.__super__.constructor.call(this, this.kachelId);
-        this.animCount = 0;
-        this.colors = {
-            dsk: [[128, 128, 255], [64, 64, 255]],
-            net: [[0, 150, 0], [0, 255, 0]],
-            cpu: [[255, 255, 0], [255, 100, 0]]
-        };
-        this.tops = {
-            net: '0%',
-            dsk: '33%',
-            cpu: '66%'
-        };
-        post.on('sysinfo', this.onData);
-        this.initDish();
+Sysdish = (function ()
+{
+    _k_.extend(Sysdish, Kachel);
+    function Sysdish (kachelId = 'sysdish')
+    {
+        this.kachelId = kachelId
+    
+        this["animDish"] = this["animDish"].bind(this)
+        this["onData"] = this["onData"].bind(this)
+        Sysdish.__super__.constructor.call(this,this.kachelId)
+        this.animCount = 0
+        this.colors = {dsk:[[128,128,255],[64,64,255]],net:[[0,150,0],[0,255,0]],cpu:[[255,255,0],[255,100,0]]}
+        this.tops = {net:'0%',dsk:'33%',cpu:'66%'}
+        post.on('sysinfo',this.onData)
+        this.initDish()
+        return Sysdish.__super__.constructor.apply(this, arguments)
     }
 
-    Sysdish.prototype.onData = function(data) {
-        this.data = data;
-        this.drawDish();
-        return this.animDish();
-    };
+    Sysdish.prototype["onData"] = function (data)
+    {
+        this.data = data
+    
+        this.drawDish()
+        return this.animDish()
+    }
 
-    Sysdish.prototype.pie180 = function(pie, radius, angle, start) {
-        var ex, ey, sx, sy;
-        if (start == null) {
-            start = 0;
+    Sysdish.prototype["pie180"] = function (pie, radius, angle, start = 0)
+    {
+        var ex, ey, sx, sy
+
+        angle = clamp(0,180,angle)
+        sx = radius * Math.sin(deg2rad(start + angle))
+        sy = -radius * Math.cos(deg2rad(start + angle))
+        ex = radius * Math.sin(deg2rad(start))
+        ey = -radius * Math.cos(deg2rad(start))
+        return pie.setAttribute('d',`M 0 0 L ${sx} ${sy} A ${radius} ${radius} ${start} 0 0 ${ex} ${ey} z`)
+    }
+
+    Sysdish.prototype["pie360"] = function (pie, radius, angle)
+    {
+        var ex, ey, f, sx, sy
+
+        angle = clamp(0,359,angle)
+        sx = radius * Math.sin(deg2rad(angle))
+        sy = -radius * Math.cos(deg2rad(angle))
+        ex = 0
+        ey = -radius
+        f = angle <= 180 && '0 0' || '1 0'
+        return pie.setAttribute('d',`M 0 0 L ${sx} ${sy} A ${radius} ${radius} 0 ${f} ${ex} ${ey} z`)
+    }
+
+    Sysdish.prototype["animDish"] = function ()
+    {
+        var steps, _81_24_
+
+        clearTimeout(this.animTimer)
+        if (!this.data)
+        {
+            return
         }
-        angle = clamp(0, 180, angle);
-        sx = radius * Math.sin(deg2rad(start + angle));
-        sy = -radius * Math.cos(deg2rad(start + angle));
-        ex = radius * Math.sin(deg2rad(start));
-        ey = -radius * Math.cos(deg2rad(start));
-        return pie.setAttribute('d', "M 0 0 L " + sx + " " + sy + " A " + radius + " " + radius + " " + start + " 0 0 " + ex + " " + ey + " z");
-    };
-
-    Sysdish.prototype.pie360 = function(pie, radius, angle) {
-        var ex, ey, f, sx, sy;
-        angle = clamp(0, 359, angle);
-        sx = radius * Math.sin(deg2rad(angle));
-        sy = -radius * Math.cos(deg2rad(angle));
-        ex = 0;
-        ey = -radius;
-        f = angle <= 180 && '0 0' || '1 0';
-        return pie.setAttribute('d', "M 0 0 L " + sx + " " + sy + " A " + radius + " " + radius + " 0 " + f + " " + ex + " " + ey + " z");
-    };
-
-    Sysdish.prototype.animDish = function() {
-        var steps;
-        clearTimeout(this.animTimer);
-        if (!this.data) {
-            return;
-        }
-        steps = 20;
-        this.animCount += 1;
-        if (this.animCount <= steps) {
-            if (this.data.dsk != null) {
-                this.dskrNow += (this.dskrNew - this.dskrOld) / steps;
-                this.dskwNow += (this.dskwNew - this.dskwOld) / steps;
-                this.pie180(this.dskrPie, 45, this.dskrNow);
-                this.pie180(this.dskwPie, 45, this.dskwNow, 180);
+        steps = 20
+        this.animCount += 1
+        if (this.animCount <= steps)
+        {
+            if ((this.data.dsk != null))
+            {
+                this.dskrNow += (this.dskrNew - this.dskrOld) / steps
+                this.dskwNow += (this.dskwNew - this.dskwOld) / steps
+                this.pie180(this.dskrPie,45,this.dskrNow)
+                this.pie180(this.dskwPie,45,this.dskwNow,180)
             }
-            this.netrNow += (this.netrNew - this.netrOld) / steps;
-            this.nettNow += (this.nettNew - this.nettOld) / steps;
-            this.pie180(this.netrPie, 43, this.netrNow);
-            this.pie180(this.nettPie, 43, this.nettNow, 180);
-            this.sysNow += (this.sysNew - this.sysOld) / steps;
-            this.usrNow += (this.usrNew - this.usrOld) / steps;
-            this.pie360(this.usrPie, 40, this.usrNow);
-            this.pie360(this.sysPie, 40, this.sysNow);
-            this.memuNow += (this.memuNew - this.memuOld) / steps;
-            this.memaNow += (this.memaNew - this.memaOld) / steps;
-            this.pie360(this.memuPie, 18, this.memuNow);
-            this.pie360(this.memaPie, 18, this.memaNow);
+            this.netrNow += (this.netrNew - this.netrOld) / steps
+            this.nettNow += (this.nettNew - this.nettOld) / steps
+            this.pie180(this.netrPie,43,this.netrNow)
+            this.pie180(this.nettPie,43,this.nettNow,180)
+            this.sysNow += (this.sysNew - this.sysOld) / steps
+            this.usrNow += (this.usrNew - this.usrOld) / steps
+            this.pie360(this.usrPie,40,this.usrNow)
+            this.pie360(this.sysPie,40,this.sysNow)
+            this.memuNow += (this.memuNew - this.memuOld) / steps
+            this.memaNow += (this.memaNew - this.memaOld) / steps
+            this.pie360(this.memuPie,18,this.memuNow)
+            this.pie360(this.memaPie,18,this.memaNow)
         }
-        return this.animTimer = setTimeout(this.animDish, parseInt(4000 / steps));
-    };
+        return this.animTimer = setTimeout(this.animDish,parseInt(4000 / steps))
+    }
 
-    Sysdish.prototype.initDish = function() {
-        var pie, svg;
-        this.div.innerHTML = '';
-        svg = utils.svg({
-            clss: 'dish'
-        });
-        this.div.appendChild(svg);
-        pie = utils.circle({
-            radius: 45,
-            clss: 'sysdish_disk_bgr',
-            svg: svg
-        });
-        this.dskrPie = utils.pie({
-            svg: svg,
-            radius: 40,
-            clss: 'sysdish_disk_read',
-            angle: 0
-        });
-        this.dskwPie = utils.pie({
-            svg: svg,
-            radius: 40,
-            clss: 'sysdish_disk_write',
-            angle: 0,
-            start: 180
-        });
-        this.netrPie = utils.pie({
-            svg: svg,
-            radius: 40,
-            clss: 'sysdish_net_recv',
-            angle: 0
-        });
-        this.nettPie = utils.pie({
-            svg: svg,
-            radius: 40,
-            clss: 'sysdish_net_send',
-            angle: 0,
-            start: 180
-        });
-        pie = utils.circle({
-            radius: 40,
-            clss: 'sysdish_load_bgr',
-            svg: svg
-        });
-        this.sysPie = utils.pie({
-            svg: pie,
-            radius: 40,
-            clss: 'sysdish_load_sys',
-            angle: 0
-        });
-        this.usrPie = utils.pie({
-            svg: pie,
-            radius: 40,
-            clss: 'sysdish_load_usr',
-            angle: 0
-        });
-        this.memuPie = utils.pie({
-            svg: svg,
-            radius: 40,
-            clss: 'sysdish_mem_used',
-            angle: 0
-        });
-        return this.memaPie = utils.pie({
-            svg: svg,
-            radius: 40,
-            clss: 'sysdish_mem_active',
-            angle: 0
-        });
-    };
+    Sysdish.prototype["initDish"] = function ()
+    {
+        var pie, svg
 
-    Sysdish.prototype.drawDish = function() {
-        if (!this.data) {
-            return;
+        this.div.innerHTML = ''
+        svg = utils.svg(100,100,'dish')
+        this.div.appendChild(svg)
+        pie = utils.circle(45,0,0,'sysdish_disk_bgr',svg)
+        this.dskrPie = utils.pie(40,0,0,0,0,'sysdish_disk_read',svg)
+        this.dskwPie = utils.pie(40,0,0,0,180,'sysdish_disk_write',svg)
+        this.netrPie = utils.pie(40,0,0,0,0,'sysdish_net_recv',svg)
+        this.nettPie = utils.pie(40,0,0,0,180,'sysdish_net_send',svg)
+        pie = utils.circle(40,0,0,'sysdish_load_bgr',svg)
+        this.sysPie = utils.pie(40,0,0,0,0,'sysdish_load_sys',pie)
+        this.usrPie = utils.pie(40,0,0,0,0,'sysdish_load_usr',pie)
+        this.memuPie = utils.pie(40,0,0,0,0,'sysdish_mem_used',svg)
+        return this.memaPie = utils.pie(40,0,0,0,0,'sysdish_mem_active',svg)
+    }
+
+    Sysdish.prototype["drawDish"] = function ()
+    {
+        var _149_21_
+
+        if (!this.data)
+        {
+            return
         }
-        clearTimeout(this.animTimer);
-        this.animCount = 0;
-        if (this.data.dsk != null) {
-            this.dskrOld = this.dskrNow = this.dskrNew;
-            this.dskwOld = this.dskwNow = this.dskwNew;
-            this.dskrNew = 180 * this.data.dsk.r_sec / this.data.dsk.r_max;
-            this.dskwNew = 180 * this.data.dsk.w_sec / this.data.dsk.w_max;
+        clearTimeout(this.animTimer)
+        this.animCount = 0
+        if ((this.data.dsk != null))
+        {
+            this.dskrOld = this.dskrNow = this.dskrNew
+            this.dskwOld = this.dskwNow = this.dskwNew
+            this.dskrNew = 180 * this.data.dsk.r_sec / this.data.dsk.r_max
+            this.dskwNew = 180 * this.data.dsk.w_sec / this.data.dsk.w_max
         }
-        this.netrOld = this.netrNow = this.netrNew;
-        this.nettOld = this.nettNow = this.nettNew;
-        this.netrNew = 180 * this.data.net.rx_sec / this.data.net.rx_max;
-        this.nettNew = 180 * this.data.net.tx_sec / this.data.net.tx_max;
-        this.sysOld = this.sysNow = this.sysNew;
-        this.usrOld = this.usrNow = this.usrNew;
-        this.sysNew = 360 * this.data.cpu.sys;
-        this.usrNew = 360 * this.data.cpu.usr;
-        this.memuOld = this.memuNow = this.memuNew;
-        this.memaOld = this.memaNow = this.memaNew;
-        this.memuNew = 360 * this.data.mem.used / this.data.mem.total;
-        return this.memaNew = 360 * this.data.mem.active / this.data.mem.total;
-    };
+        this.netrOld = this.netrNow = this.netrNew
+        this.nettOld = this.nettNow = this.nettNew
+        this.netrNew = 180 * this.data.net.rx_sec / this.data.net.rx_max
+        this.nettNew = 180 * this.data.net.tx_sec / this.data.net.tx_max
+        this.sysOld = this.sysNow = this.sysNew
+        this.usrOld = this.usrNow = this.usrNew
+        this.sysNew = 360 * this.data.cpu.sys
+        this.usrNew = 360 * this.data.cpu.usr
+        this.memuOld = this.memuNow = this.memuNew
+        this.memaOld = this.memaNow = this.memaNew
+        this.memuNew = 360 * this.data.mem.used / this.data.mem.total
+        return this.memaNew = 360 * this.data.mem.active / this.data.mem.total
+    }
 
-    return Sysdish;
+    return Sysdish
+})()
 
-})(Kachel);
-
-module.exports = Sysdish;
-
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoic3lzZGlzaC5qcyIsInNvdXJjZVJvb3QiOiIuLi9jb2ZmZWUiLCJzb3VyY2VzIjpbInN5c2Rpc2guY29mZmVlIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7O0FBQUE7Ozs7Ozs7QUFBQSxJQUFBLGlEQUFBO0lBQUE7Ozs7QUFRQSxNQUEyQixPQUFBLENBQVEsS0FBUixDQUEzQixFQUFFLGlCQUFGLEVBQVMscUJBQVQsRUFBa0I7O0FBRWxCLEtBQUEsR0FBVSxPQUFBLENBQVEsU0FBUjs7QUFDVixNQUFBLEdBQVUsT0FBQSxDQUFRLFVBQVI7O0FBRUo7OztJQUVDLGlCQUFDLFFBQUQ7UUFBQyxJQUFDLENBQUEsOEJBQUQsV0FBVTs7O1FBRVYseUNBQU0sSUFBQyxDQUFBLFFBQVA7UUFFQSxJQUFDLENBQUEsU0FBRCxHQUFhO1FBRWIsSUFBQyxDQUFBLE1BQUQsR0FDSTtZQUFBLEdBQUEsRUFBSyxDQUFDLENBQUMsR0FBRCxFQUFLLEdBQUwsRUFBUyxHQUFULENBQUQsRUFBZSxDQUFFLEVBQUYsRUFBTSxFQUFOLEVBQVMsR0FBVCxDQUFmLENBQUw7WUFDQSxHQUFBLEVBQUssQ0FBQyxDQUFHLENBQUgsRUFBSyxHQUFMLEVBQVcsQ0FBWCxDQUFELEVBQWUsQ0FBRyxDQUFILEVBQUssR0FBTCxFQUFXLENBQVgsQ0FBZixDQURMO1lBRUEsR0FBQSxFQUFLLENBQUMsQ0FBQyxHQUFELEVBQUssR0FBTCxFQUFXLENBQVgsQ0FBRCxFQUFlLENBQUMsR0FBRCxFQUFLLEdBQUwsRUFBVyxDQUFYLENBQWYsQ0FGTDs7UUFJSixJQUFDLENBQUEsSUFBRCxHQUNJO1lBQUEsR0FBQSxFQUFLLElBQUw7WUFDQSxHQUFBLEVBQUssS0FETDtZQUVBLEdBQUEsRUFBSyxLQUZMOztRQUlKLElBQUksQ0FBQyxFQUFMLENBQVEsU0FBUixFQUFrQixJQUFDLENBQUEsTUFBbkI7UUFFQSxJQUFDLENBQUEsUUFBRCxDQUFBO0lBbEJEOztzQkEwQkgsTUFBQSxHQUFRLFNBQUMsSUFBRDtRQUFD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QUFDLENBQUEsT0FBRCxHQUFXLElBQUMsQ0FBQSxPQUFELEdBQVcsSUFBQyxDQUFBO1FBRXZCLElBQUMsQ0FBQSxPQUFELEdBQVcsR0FBQSxHQUFJLElBQUMsQ0FBQSxJQUFJLENBQUMsR0FBRyxDQUFDLElBQWQsR0FBbUIsSUFBQyxDQUFBLElBQUksQ0FBQyxHQUFHLENBQUM7ZUFDeEMsSUFBQyxDQUFBLE9BQUQsR0FBVyxHQUFBLEdBQUksSUFBQyxDQUFBLElBQUksQ0FBQyxHQUFHLENBQUMsTUFBZCxHQUFxQixJQUFDLENBQUEsSUFBSSxDQUFDLEdBQUcsQ0FBQztJQWhDcEM7Ozs7R0EvSE87O0FBaUt0QixNQUFNLENBQUMsT0FBUCxHQUFpQiIsInNvdXJjZXNDb250ZW50IjpbIiMjI1xuIDAwMDAwMDAgIDAwMCAgIDAwMCAgIDAwMDAwMDAgIDAwMDAwMDAgICAgMDAwICAgMDAwMDAwMCAgMDAwICAgMDAwICBcbjAwMCAgICAgICAgMDAwIDAwMCAgIDAwMCAgICAgICAwMDAgICAwMDAgIDAwMCAgMDAwICAgICAgIDAwMCAgIDAwMCAgXG4wMDAwMDAwICAgICAwMDAwMCAgICAwMDAwMDAwICAgMDAwICAgMDAwICAwMDAgIDAwMDAwMDAgICAwMDAwMDAwMDAgIFxuICAgICAwMDAgICAgIDAwMCAgICAgICAgICAwMDAgIDAwMCAgIDAwMCAgMDAwICAgICAgIDAwMCAgMDAwICAgMDAwICBcbjAwMDAwMDAgICAgICAwMDAgICAgIDAwMDAwMDAgICAwMDAwMDAwICAgIDAwMCAgMDAwMDAwMCAgIDAwMCAgIDAwMCAgXG4jIyNcblxueyBjbGFtcCwgZGVnMnJhZCwgcG9zdCB9ID0gcmVxdWlyZSAna3hrJ1xuXG51dGlscyAgID0gcmVxdWlyZSAnLi91dGlscydcbkthY2hlbCAgPSByZXF1aXJlICcuL2thY2hlbCdcblxuY2xhc3MgU3lzZGlzaCBleHRlbmRzIEthY2hlbFxuICAgICAgICBcbiAgICBAOiAoQGthY2hlbElkPSdzeXNkaXNoJykgLT4gXG4gICAgICAgIFxuICAgICAgICBzdXBlciBAa2FjaGVsSWRcbiAgICAgICAgXG4gICAgICAgIEBhbmltQ291bnQgPSAwXG4gICAgICAgIFxuICAgICAgICBAY29sb3JzID1cbiAgICAgICAgICAgIGRzazogW1sxMjggMTI4IDI1NV0gWyA2NCAgNjQgMjU1XV1cbiAgICAgICAgICAgIG5ldDogW1sgIDAgMTUwICAgMF0gWyAgMCAyNTUgICAwXV1cbiAgICAgICAgICAgIGNwdTogW1syNTUgMjU1ICAgMF0gWzI1NSAxMDAgICAwXV1cbiAgICAgICAgICAgIFxuICAgICAgICBAdG9wcyA9IFxuICAgICAgICAgICAgbmV0OiAnMCUnXG4gICAgICAgICAgICBkc2s6ICczMyUnXG4gICAgICAgICAgICBjcHU6ICc2NiUnXG4gICAgICAgIFxuICAgICAgICBwb3N0Lm9uICdzeXNpbmZvJyBAb25EYXRhXG4gICAgICAgIFxuICAgICAgICBAaW5pdERpc2goKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIFxuICAgICMgIDAwMDAwMDAgICAwMDAgICAwMDAgIDAwMDAwMDAgICAgIDAwMDAwMDAgICAwMDAwMDAwMDAgICAwMDAwMDAwICAgXG4gICAgIyAwMDAgICAwMDAgIDAwMDAgIDAwMCAgMDAwICAgMDAwICAwMDAgICAwMDAgICAgIDAwMCAgICAgMDAwICAgMDAwICBcbiAgICAjIDAwMCAgIDAwMCAgMDAwIDAgMDAwICAwMDAgICAwMDAgIDAwMDAwMDAwMCAgICAgMDAwICAgICAwMDAwMDAwMDAgIFxuICAgICMgMDAwICAgMDAwICAwMDAgIDAwMDAgIDAwMCAgIDAwMCAgMDAwICAgMDAwICAgICAwMDAgICAgIDAwMCAgIDAwMCAgXG4gICAgIyAgMDAwMDAwMCAgIDAwMCAgIDAwMCAgMDAwMDAwMCAgICAwMDAgICAwMDAgICAgIDAwMCAgICAgMDAwICAgMDAwICBcbiAgICBcbiAgICBvbkRhdGE6IChAZGF0YSkgPT5cbiAgICAgICAgICAgIFxuICAgICAgICBAZHJhd0Rpc2goKVxuICAgICAgICBAYW5pbURpc2goKVxuICAgICAgICBcbiAgICAjICAwMDAwMDAwICAgMDAwICAgMDAwICAwMDAgIDAwICAgICAwMCAgMDAwMDAwMCAgICAwMDAgICAwMDAwMDAwICAwMDAgICAwMDAgIFxuICAgICMgMDAwICAgMDAwICAwMDAwICAwMDAgIDAwMCAgMDAwICAgMDAwICAwMDAgICAwMDAgIDAwMCAgMDAwICAgICAgIDAwMCAgIDAwMCAgXG4gICAgIyAwMDAwMDAwMDAgIDAwMCAwIDAwMCAgMDAwICAwMDAwMDAwMDAgIDAwMCAgIDAwMCAgMDAwICAwMDAwMDAwICAgMDAwMDAwMDAwICBcbiAgICAjIDAwMCAgIDAwMCAgMDAwICAwMDAwICAwMDAgIDAwMCAwIDAwMCAgMDAwICAgMDAwICAwMDAgICAgICAgMDAwICAwMDAgICAwMDAgIFxuICAgICMgMDAwICAgMDAwICAwMDAgICAwMDAgIDAwMCAgMDAwICAgMDAwICAwMDAwMDAwICAgIDAwMCAgMDAwMDAwMCAgIDAwMCAgIDAwMCAgXG5cbiAgICBwaWUxODA6IChwaWUsIHJhZGl1cywgYW5nbGUsIHN0YXJ0PTApIC0+XG4gICAgICAgIFxuICAgICAgICBhbmdsZSA9IGNsYW1wIDAsIDE4MCwgYW5nbGVcbiAgICAgICAgc3ggPSAgcmFkaXVzICogTWF0aC5zaW4gZGVnMnJhZCBzdGFydCthbmdsZVxuICAgICAgICBzeSA9IC1yYWRpdXMgKiBNYXRoLmNvcyBkZWcycmFkIHN0YXJ0K2FuZ2xlXG4gICAgICAgIGV4ID0gIHJhZGl1cyAqIE1hdGguc2luIGRlZzJyYWQgc3RhcnRcbiAgICAgICAgZXkgPSAtcmFkaXVzICogTWF0aC5jb3MgZGVnMnJhZCBzdGFydFxuICAgICAgICBwaWUuc2V0QXR0cmlidXRlICdkJyBcIk0gMCAwIEwgI3tzeH0gI3tzeX0gQSAje3JhZGl1c30gI3tyYWRpdXN9ICN7c3RhcnR9IDAgMCAje2V4fSAje2V5fSB6XCJcbiAgICBcbiAgICBwaWUzNjA6IChwaWUsIHJhZGl1cywgYW5nbGUpIC0+XG4gICAgICAgIFxuICAgICAgICBhbmdsZSA9IGNsYW1wIDAsIDM1OSwgYW5nbGVcbiAgICAgICAgc3ggPSAgcmFkaXVzICogTWF0aC5zaW4gZGVnMnJhZCBhbmdsZVxuICAgICAgICBzeSA9IC1yYWRpdXMgKiBNYXRoLmNvcyBkZWcycmFkIGFuZ2xlXG4gICAgICAgIGV4ID0gIDBcbiAgICAgICAgZXkgPSAtcmFkaXVzXG4gICAgICAgIGYgPSBhbmdsZSA8PSAxODAgYW5kICcwIDAnIG9yICcxIDAnXG4gICAgICAgIHBpZS5zZXRBdHRyaWJ1dGUgJ2QnIFwiTSAwIDAgTCAje3N4fSAje3N5fSBBICN7cmFkaXVzfSAje3JhZGl1c30gMCAje2Z9ICN7ZXh9ICN7ZXl9IHpcIlxuICAgIFxuICAgIGFuaW1EaXNoOiA9PlxuICAgICAgICBcbiAgICAgICAgY2xlYXJUaW1lb3V0IEBhbmltVGltZXJcbiAgICAgICAgXG4gICAgICAgIHJldHVybiBpZiBub3QgQGRhdGFcbiAgICAgICAgc3RlcHMgPSAyMCBcbiAgICAgICAgQGFuaW1Db3VudCArPSAxXG4gICAgICAgIGlmIEBhbmltQ291bnQgPD0gc3RlcHNcbiAgICAgICAgICAgIFxuICAgICAgICAgICAgaWYgQGRhdGEuZHNrP1xuICAgICAgICAgICAgICAgICBcbiAgICAgICAgICAgICAgICBAZHNrck5vdyArPSAoQGRza3JOZXcgLSBAZHNrck9sZCkgLyBzdGVwcyBcbiAgICAgICAgICAgICAgICBAZHNrd05vdyArPSAoQGRza3dOZXcgLSBAZHNrd09sZCkgLyBzdGVwc1xuICAgICAgICAgICAgICAgICBcbiAgICAgICAgICAgICAgICBAcGllMTgwIEBkc2tyUGllLCA0NSwgQGRza3JOb3dcbiAgICAgICAgICAgICAgICBAcGllMTgwIEBkc2t3UGllLCA0NSwgQGRza3dOb3csIDE4MFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcbiAgICAgICAgICAgIEBuZXRyTm93ICs9IChAbmV0ck5ldyAtIEBuZXRyT2xkKSAvIHN0ZXBzXG4gICAgICAgICAgICBAbmV0dE5vdyArPSAoQG5ldHROZXcgLSBAbmV0dE9sZCkgLyBzdGVwcyBcbiAgICAgICAgICAgICBcbiAgICAgICAgICAgIEBwaWUxODAgQG5ldHJQaWUsIDQzLCBAbmV0ck5vd1xuICAgICAgICAgICAgQHBpZTE4MCBAbmV0dFBpZSwgNDMsIEBuZXR0Tm93LCAxODBcbiAgICAgICAgICAgIFxuICAgICAgICAgICAgQHN5c05vdyArPSAoQHN5c05ldyAtIEBzeXNPbGQpIC8gc3RlcHMgXG4gICAgICAgICAgICBAdXNyTm93ICs9IChAdXNyTmV3IC0gQHVzck9sZCkgLyBzdGVwcyBcbiAgICAgICAgICAgIFxuICAgICAgICAgICAgQHBpZTM2MCBAdXNyUGllLCA0MCwgQHVzck5vd1xuICAgICAgICAgICAgQHBpZTM2MCBAc3lzUGllLCA0MCwgQHN5c05vd1xuICAgICAgICAgICAgXG4gICAgICAgICAgICBAbWVtdU5vdyArPSAoQG1lbXVOZXcgLSBAbWVtdU9sZCkgLyBzdGVwc1xuICAgICAgICAgICAgQG1lbWFOb3cgKz0gKEBtZW1hTmV3IC0gQG1lbWFPbGQpIC8gc3RlcHMgXG4gICAgICAgICAgICBcbiAgICAgICAgICAgIEBwaWUzNjAgQG1lbXVQaWUsIDE4LCBAbWVtdU5vd1xuICAgICAgICAgICAgQHBpZTM2MCBAbWVtYVBpZSwgMTgsIEBtZW1hTm93XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgXG4gICAgICAgIEBhbmltVGltZXIgPSBzZXRUaW1lb3V0IEBhbmltRGlzaCwgcGFyc2VJbnQgNDAwMCAvIHN0ZXBzXG4gICAgXG4gICAgIyAwMDAgIDAwMCAgIDAwMCAgMDAwICAwMDAwMDAwMDAgIDAwMDAwMDAgICAgMDAwICAgMDAwMDAwMCAgMDAwICAgMDAwICBcbiAgICAjIDAwMCAgMDAwMCAgMDAwICAwMDAgICAgIDAwMCAgICAgMDAwICAgMDAwICAwMDAgIDAwMCAgICAgICAwMDAgICAwMDAgIFxuICAgICMgMDAwICAwMDAgMCAwMDAgIDAwMCAgICAgMDAwICAgICAwMDAgICAwMDAgIDAwMCAgMDAwMDAwMCAgIDAwMDAwMDAwMCAgXG4gICAgIyAwMDAgIDAwMCAgMDAwMCAgMDAwICAgICAwMDAgICAgIDAwMCAgIDAwMCAgMDAwICAgICAgIDAwMCAgMDAwICAgMDAwICBcbiAgICAjIDAwMCAgMDAwICAgMDAwICAwMDAgICAgIDAwMCAgICAgMDAwMDAwMCAgICAwMDAgIDAwMDAwMDAgICAwMDAgICAwMDAgIFxuICAgIFxuICAgIGluaXREaXNoOiAtPlxuIFxuICAgICAgICBAZGl2LmlubmVySFRNTCA9ICcnXG4gICAgICAgIHN2ZyA9IHV0aWxzLnN2ZyBjbHNzOidkaXNoJ1xuICAgICAgICBAZGl2LmFwcGVuZENoaWxkIHN2Z1xuXG4gICAgICAgIHBpZSA9IHV0aWxzLmNpcmNsZSByYWRpdXM6NDUgY2xzczonc3lzZGlzaF9kaXNrX2Jncicgc3ZnOnN2Z1xuICAgICAgICBAZHNrclBpZSA9IHV0aWxzLnBpZSBzdmc6c3ZnLCByYWRpdXM6NDAgY2xzczonc3lzZGlzaF9kaXNrX3JlYWQnICBhbmdsZTowXG4gICAgICAgIEBkc2t3UGllID0gdXRpbHMucGllIHN2ZzpzdmcsIHJhZGl1czo0MCBjbHNzOidzeXNkaXNoX2Rpc2tfd3JpdGUnIGFuZ2xlOjAsIHN0YXJ0OjE4MFxuICAgICAgICBcbiAgICAgICAgQG5ldHJQaWUgPSB1dGlscy5waWUgc3ZnOnN2ZywgcmFkaXVzOjQwIGNsc3M6J3N5c2Rpc2hfbmV0X3JlY3YnIGFuZ2xlOjBcbiAgICAgICAgQG5ldHRQaWUgPSB1dGlscy5waWUgc3ZnOnN2ZywgcmFkaXVzOjQwIGNsc3M6J3N5c2Rpc2hfbmV0X3NlbmQnIGFuZ2xlOjAgc3RhcnQ6MTgwXG4gICAgICAgICAgICBcbiAgICAgICAgcGllID0gdXRpbHMuY2lyY2xlIHJhZGl1czo0MCBjbHNzOidzeXNkaXNoX2xvYWRfYmdyJyBzdmc6c3ZnXG4gICAgICAgIEBzeXNQaWUgPSB1dGlscy5waWUgc3ZnOnBpZSwgcmFkaXVzOjQwIGNsc3M6J3N5c2Rpc2hfbG9hZF9zeXMnIGFuZ2xlOjBcbiAgICAgICAgQHVzclBpZSA9IHV0aWxzLnBpZSBzdmc6cGllLCByYWRpdXM6NDAgY2xzczonc3lzZGlzaF9sb2FkX3VzcicgYW5nbGU6MFxuXG4gICAgICAgIEBtZW11UGllID0gdXRpbHMucGllIHN2ZzpzdmcsIHJhZGl1czo0MCBjbHNzOidzeXNkaXNoX21lbV91c2VkJyAgIGFuZ2xlOjBcbiAgICAgICAgQG1lbWFQaWUgPSB1dGlscy5waWUgc3ZnOnN2ZywgcmFkaXVzOjQwIGNsc3M6J3N5c2Rpc2hfbWVtX2FjdGl2ZScgYW5nbGU6MFxuICAgICAgICBcbiAgICAgIyAwMDAwMDAwICAgIDAwMDAwMDAwICAgIDAwMDAwMDAgICAwMDAgICAwMDAgIDAwMDAwMDAgICAgMDAwICAgMDAwMDAwMCAgMDAwICAgMDAwXG4gICAgICMgMDAwICAgMDAwICAwMDAgICAwMDAgIDAwMCAgIDAwMCAgMDAwIDAgMDAwICAwMDAgICAwMDAgIDAwMCAgMDAwICAgICAgIDAwMCAgIDAwMFxuICAgICAjIDAwMCAgIDAwMCAgMDAwMDAwMCAgICAwMDAwMDAwMDAgIDAwMDAwMDAwMCAgMDAwICAgMDAwICAwMDAgIDAwMDAwMDAgICAwMDAwMDAwMDBcbiAgICAgIyAwMDAgICAwMDAgIDAwMCAgIDAwMCAgMDAwICAgMDAwICAwMDAgICAwMDAgIDAwMCAgIDAwMCAgMDAwICAgICAgIDAwMCAgMDAwICAgMDAwXG4gICAgICMgMDAwMDAwMCAgICAwMDAgICAwMDAgIDAwMCAgIDAwMCAgMDAgICAgIDAwICAwMDAwMDAwICAgIDAwMCAgMDAwMDAwMCAgIDAwMCAgIDAwMFxuXG4gICAgIGRyYXdEaXNoOiAtPlxuXG4gICAgICAgICByZXR1cm4gaWYgbm90IEBkYXRhXG5cbiAgICAgICAgIGNsZWFyVGltZW91dCBAYW5pbVRpbWVyXG4gICAgICAgICBcbiAgICAgICAgIEBhbmltQ291bnQgPSAwXG5cbiAgICAgICAgIGlmIEBkYXRhLmRzaz9cblxuICAgICAgICAgICAgIEBkc2tyT2xkID0gQGRza3JOb3cgPSBAZHNrck5ld1xuICAgICAgICAgICAgIEBkc2t3T2xkID0gQGRza3dOb3cgPSBAZHNrd05ld1xuXG4gICAgICAgICAgICAgQGRza3JOZXcgPSAxODAqQGRhdGEuZHNrLnJfc2VjL0BkYXRhLmRzay5yX21heFxuICAgICAgICAgICAgIEBkc2t3TmV3ID0gMTgwKkBkYXRhLmRzay53X3NlYy9AZGF0YS5kc2sud19tYXhcbiAgICAgICAgICAgICBcbiAgICAgICAgIEBuZXRyT2xkID0gQG5ldHJOb3cgPSBAbmV0ck5ld1xuICAgICAgICAgQG5ldHRPbGQgPSBAbmV0dE5vdyA9IEBuZXR0TmV3XG5cbiAgICAgICAgIEBuZXRyTmV3ID0gMTgwKkBkYXRhLm5ldC5yeF9zZWMvQGRhdGEubmV0LnJ4X21heFxuICAgICAgICAgQG5ldHROZXcgPSAxODAqQGRhdGEubmV0LnR4X3NlYy9AZGF0YS5uZXQudHhfbWF4XG4gICAgICAgICBcbiAgICAgICAgIEBzeXNPbGQgPSBAc3lzTm93ID0gQHN5c05ld1xuICAgICAgICAgQHVzck9sZCA9IEB1c3JOb3cgPSBAdXNyTmV3XG5cbiAgICAgICAgIEBzeXNOZXcgPSAzNjAqQGRhdGEuY3B1LnN5c1xuICAgICAgICAgQHVzck5ldyA9IDM2MCpAZGF0YS5jcHUudXNyXG5cbiAgICAgICAgIEBtZW11T2xkID0gQG1lbXVOb3cgPSBAbWVtdU5ld1xuICAgICAgICAgQG1lbWFPbGQgPSBAbWVtYU5vdyA9IEBtZW1hTmV3XG5cbiAgICAgICAgIEBtZW11TmV3ID0gMzYwKkBkYXRhLm1lbS51c2VkL0BkYXRhLm1lbS50b3RhbFxuICAgICAgICAgQG1lbWFOZXcgPSAzNjAqQGRhdGEubWVtLmFjdGl2ZS9AZGF0YS5tZW0udG90YWxcbiAgICAgICAgICAgICAgICBcbm1vZHVsZS5leHBvcnRzID0gU3lzZGlzaFxuIl19
-//# sourceURL=../coffee/sysdish.coffee
+module.exports = Sysdish
