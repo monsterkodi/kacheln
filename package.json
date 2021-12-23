@@ -17,13 +17,12 @@
   },
   "dependencies": {
     "kxk": "monsterkodi/kxk",
-    "wxw": "monsterkodi/wxw",
-    "macos-native-processlist": "^2.0.0",
-    "systeminformation": "^5.9.17"
+    "systeminformation": "^5.9.17",
+    "wxw": "^1.89.0"
   },
   "devDependencies": {
-    "kode": "monsterkodi/kode",
     "electron": "^16.0.5",
-    "electron-builder": "^22.14.5"
+    "electron-builder": "^22.14.5",
+    "kode": "monsterkodi/kode"
   }
 }

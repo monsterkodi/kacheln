@@ -1,21 +1,20 @@
-// monsterkodi/kode 0.200.0
+// monsterkodi/kode 0.201.0
 
 var _k_ = {empty: function (l) {return l==='' || l===null || l===undefined || l!==l || typeof(l) === 'object' && Object.keys(l).length === 0}, in: function (a,l) {return (typeof l === 'string' && typeof a === 'string' && a.length ? '' : []).indexOf.call(l,a) >= 0}, list: function (l) {return (l != null ? typeof l.length === 'number' ? l : [] : [])}}
 
-var $, Apps, childp, Clock, Data, electron, filter, kpos, last, Mouse, os, post, slash, Sysinfo, udp, win, Wins, wxw, _
+var $, Apps, childp, Clock, Data, electron, kpos, kxk, last, Mouse, os, post, slash, Sysinfo, udp, win, Wins, wxw, _
 
-$ = require('kxk').$
-_ = require('kxk')._
-childp = require('kxk').childp
-empty = require('kxk').empty
-filter = require('kxk').filter
-kpos = require('kxk').kpos
-last = require('kxk').last
-os = require('kxk').os
-post = require('kxk').post
-slash = require('kxk').slash
-udp = require('kxk').udp
-win = require('kxk').win
+kxk = require('kxk')
+$ = kxk.$
+_ = kxk._
+childp = kxk.childp
+kpos = kxk.kpos
+last = kxk.last
+os = kxk.os
+post = kxk.post
+slash = kxk.slash
+udp = kxk.udp
+win = kxk.win
 
 electron = require('electron')
 wxw = require('wxw')
@@ -50,7 +49,7 @@ Data = (function ()
 
     Data.prototype["onUDP"] = function (msg)
     {
-        var _54_85_, _55_44_, _56_44_
+        var _55_85_, _56_44_, _57_44_
 
         switch (msg.event)
         {
@@ -241,59 +240,7 @@ Wins = (function ()
     }
 
     Wins.prototype["onTick"] = function ()
-    {
-        var getProcessList
-
-        if (!slash.win())
-        {
-            getProcessList = require('macos-native-processlist').getProcessList
-
-            return getProcessList().then((function (procs)
-            {
-                var k, p
-
-                procs = filter(procs,function (p)
-                {
-                    if (0 > p.path.indexOf('.app/Contents/MacOS'))
-                    {
-                        return false
-                    }
-                    if (0 < p.name.indexOf(' Helper'))
-                    {
-                        return false
-                    }
-                    if (_k_.in(p.name,['plugin-container']))
-                    {
-                        return false
-                    }
-                    if (p.path.startsWith('/System/Library/'))
-                    {
-                        return false
-                    }
-                    return true
-                })
-                var list = _k_.list(this.kacheln())
-                for (var _207_22_ = 0; _207_22_ < list.length; _207_22_++)
-                {
-                    k = list[_207_22_]
-                    k.activated = false
-                    k.status = ''
-                    var list1 = _k_.list(procs)
-                    for (var _210_26_ = 0; _210_26_ < list1.length; _210_26_++)
-                    {
-                        p = list1[_210_26_]
-                        if (p.path.split('/Contents/MacOS/')[0] === k.kachelId)
-                        {
-                            k.activated = true
-                            k.status = 'normal'
-                            break
-                        }
-                    }
-                    k.updateDot()
-                }
-            }).bind(this))
-        }
-    }
+    {}
 
     Wins.prototype["kacheln"] = function ()
     {
@@ -301,7 +248,7 @@ Wins = (function ()
 
         kl = []
         main = $('#main')
-        for (var _222_17_ = i = 0, _222_21_ = main.children.length; (_222_17_ <= _222_21_ ? i < main.children.length : i > main.children.length); (_222_17_ <= _222_21_ ? ++i : --i))
+        for (var _223_17_ = i = 0, _223_21_ = main.children.length; (_223_17_ <= _223_21_ ? i < main.children.length : i > main.children.length); (_223_17_ <= _223_21_ ? ++i : --i))
         {
             if (main.children[i].kachel.updateDot)
             {
@@ -313,15 +260,15 @@ Wins = (function ()
 
     Wins.prototype["onEvent"] = function (event)
     {
-        var k, wins, _245_32_
+        var k, wins, _246_32_
 
         wins = event.info
         if (os.platform() === 'darwin')
         {
             var list = _k_.list(wins)
-            for (var _232_20_ = 0; _232_20_ < list.length; _232_20_++)
+            for (var _233_20_ = 0; _233_20_ < list.length; _233_20_++)
             {
-                win = list[_232_20_]
+                win = list[_233_20_]
                 if (win.index === 0)
                 {
                     win.status += ' top'
@@ -340,13 +287,13 @@ Wins = (function ()
         {
             this.lastWins = wins
             var list1 = _k_.list(this.kacheln())
-            for (var _243_18_ = 0; _243_18_ < list1.length; _243_18_++)
+            for (var _244_18_ = 0; _244_18_ < list1.length; _244_18_++)
             {
-                k = list1[_243_18_]
+                k = list1[_244_18_]
                 var list2 = _k_.list(wins)
-                for (var _244_24_ = 0; _244_24_ < list2.length; _244_24_++)
+                for (var _245_24_ = 0; _245_24_ < list2.length; _245_24_++)
                 {
-                    win = list2[_244_24_]
+                    win = list2[_245_24_]
                     if (((k != null ? k.status : undefined) != null) && win.path === k.kachelId)
                     {
                         k.activated = true

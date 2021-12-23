@@ -51,6 +51,13 @@ KachelApp = new app
     onActivate:         -> klog 'onActivate'
     onOtherInstance:    -> klog 'onOtherInstance'
     onQuit:             -> klog 'onQuit'
+    args:               """
+                        kacheln
+                            prefs       show preferences            = false
+                            noprefs     don't load preferences      = false
+                            verbose     log more                    = false
+                            devtools    open developer tools        = false  -D
+                        """
     onWinReady: (w) =>
 
         w.webContents.openDevTools(mode:'detach') if args.devtools

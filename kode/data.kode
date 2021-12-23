@@ -6,7 +6,8 @@
 0000000    000   000     000     000   000
 ###
 
-{ $, _, childp, empty, filter, kpos, last, os, post, slash, udp, win } = require 'kxk'
+kxk = require 'kxk'
+{ $, _, childp, kpos, last, os, post, slash, udp, win } = kxk
 
 electron = require 'electron'
 wxw      = require 'wxw'
@@ -188,32 +189,32 @@ function Wins
         
     onTick: ->
         
-        if not slash.win()
-            
-            { getProcessList } = require 'macos-native-processlist'
-            
-            getProcessList().then (procs) => 
-                
-                procs = filter procs, (p) -> 
-                    return false if 0 > p.path.indexOf('.app/Contents/MacOS')
-                    return false if 0 < p.name.indexOf ' Helper'
-                    return false if p.name in ['plugin-container']
-                    return false if p.path.startsWith '/System/Library/'
-                    true
-                    
-                # klog 'procs' ( p.path for p in procs ) 
-                # klog 'kacheln' @kacheln().length
-                    
-                for k in @kacheln()
-                    k.activated = false
-                    k.status = ''
-                    for p in procs
-                        if p.path.split('/Contents/MacOS/')[0] == k.kachelId
-                            k.activated = true
-                            k.status = 'normal'
-                            break
-                    # klog 'activated' k.activated, k.kachelId
-                    k.updateDot()                    
+        # if not slash.win()
+#             
+            # { getProcessList } = require 'macos-native-processlist'
+#             
+            # getProcessList().then (procs) =>
+#                 
+                # procs = filter procs, (p) -> 
+                    # return false if 0 > p.path.indexOf('.app/Contents/MacOS')
+                    # return false if 0 < p.name.indexOf ' Helper'
+                    # return false if p.name in ['plugin-container']
+                    # return false if p.path.startsWith '/System/Library/'
+                    # true
+#                     
+                # # klog 'procs' ( p.path for p in procs ) 
+                # # klog 'kacheln' @kacheln().length
+#                     
+                # for k in @kacheln()
+                    # k.activated = false
+                    # k.status = ''
+                    # for p in procs
+                        # if p.path.split('/Contents/MacOS/')[0] == k.kachelId
+                            # k.activated = true
+                            # k.status = 'normal'
+                            # break
+                    # # klog 'activated' k.activated, k.kachelId
+                    # k.updateDot()                    
 
     kacheln: ->
         

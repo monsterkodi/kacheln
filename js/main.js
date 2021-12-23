@@ -1,4 +1,4 @@
-// monsterkodi/kode 0.200.0
+// monsterkodi/kode 0.201.0
 
 var _k_
 
@@ -38,7 +38,11 @@ KachelApp = new app({pkg:pkg,dir:__dirname,shortcut:slash.win() && 'Ctrl+F2' || 
 },onQuit:function ()
 {
     return klog('onQuit')
-},onWinReady:(function (w)
+},args:`kacheln
+    prefs       show preferences            = false
+    noprefs     don't load preferences      = false
+    verbose     log more                    = false
+    devtools    open developer tools        = false  -D`,onWinReady:(function (w)
 {
     var k, keys, mainWin, v
 
